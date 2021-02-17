@@ -1,0 +1,109 @@
+<div class="product-details">
+
+    <h1 class="product-name">{{ $data->item_product_name }}</h1>
+    <div class="product-meta">
+        SKU : <span
+            class="product-sku">{{ !empty($data->item_product_sku) ? $data->item_product_sku : 'Default' }}</span>
+        BRAND : <span
+            class="product-brand">{{ Str::upper($data->item_brand_name ?? $data->brand->item_brand_name) }}</span>
+    </div>
+    <div class="product-price">{{ $mask_price }}</div>
+
+    <p class="product-short-desc">
+        {!! $data->item_product_description !!}
+    </p>
+
+    @auth
+    <a wire:click="actionWishlist('{{ $data->item_product_id }}')" class="size-guide mb-5">
+        <i class="fa fas fa-heart mr-2 button-love {{ $love ? 'love' : '' }}">
+        </i> Wishlist
+    </a>
+    @endauth
+
+    @if($data_branch)
+    <div class="product-form">
+        <label>Branch:</label>
+        <div class="select-box">
+            <select wire:model="branch_id" class="form-control">
+                <option value="none">Choose a Branch</option>
+                @foreach($data_branch->unique('item_detail_branch_id') as $brc)
+                <option value="{{ $brc->item_detail_branch_id }}">{{ $brc->item_detail_branch_name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    @endif
+
+    @if($data_color)
+    <div class="product-form">
+        <label>Color:</label>
+        <div class="select-box">
+            <select wire:model="color_id" class="form-control">
+                <option value="none">Choose a color</option>
+                @foreach($data_color->unique('item_detail_color_id') as $col)
+                <option value="{{ $col->item_detail_color_id }}">{{ $col->item_detail_color_name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    @endif
+
+    @if($data_size)
+    <div class="product-form">
+        <label>Size:</label>
+        <div class="product-form-group">
+            <div class="select-box">
+                <select wire:model="size_id" class="form-control">
+                    <option value="none">Choose a Size</option>
+                    @foreach($data_size->unique('item_detail_size_id') as $siz)
+                    <option value="{{ $siz->item_detail_size_id }}">{{ $siz->item_detail_size_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    @if($data_variant)
+    <div class="product-form">
+        <label>Variant:</label>
+        <div class="product-form-group">
+            <div class="select-box">
+                <select wire:model="variant_id" class="form-control">
+                    <option value="none" selected="selected">Choose Variant</option>
+                    @foreach($data_variant->unique('item_detail_variant_id') as $var)
+                    <option value="{{ $var->item_detail_variant_id }}">{{ $var->item_detail_variant_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <hr class="product-divider mt-5">
+
+    <div class="product-form product-qty">
+        <label>QTY:</label>
+        <div class="product-form-group">
+            <div class="input-group">
+                <button wire:click="actionMinus" class="d-icon-minus"></button>
+                <input wire:model="qty" value="{{ $qty }}" class="quantity form-control" type="number">
+                <button wire:click="actionPlus" class="d-icon-plus"></button>
+            </div>
+            <button wire:click="actionCart" class="btn-product btn-cart">
+                <i class="d-icon-bag"></i>Add To Cart
+            </button>
+        </div>
+    </div>
+
+    @if($errors->any())
+    <div class="alert text-default">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+</div>
