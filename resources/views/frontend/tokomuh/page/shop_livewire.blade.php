@@ -10,12 +10,12 @@
                             class="d-icon-arrow-left"></i></a>
                     <a wire:click="actionClean()" class="filter-clean text-primary category-filter">Clean All</a>
                 </div>
-                <div class="widget widget-collapsible">
-                    <h3 class="widget-title">All Categories</h3>
+                <div class="widget">
+                    <h3 wire:click="actionCategory('clear')" class="widget-title pointer">All Categories</h3>
                     <ul class="widget-body filter-items search-ul">
                         @foreach($data_category as $category)
                         <li>
-                            <a class="category-filter {{ array_key_exists($category->item_category_id, $session_category) ? 'active' : '' }}"
+                            <a class="category-filter {{ isset($session_category) && array_key_exists($category->item_category_id, $session_category) ? 'active' : '' }}"
                                 wire:click="actionCategory('{{ $category->item_category_id }}')">
                                 {{ $category->item_category_name }}
                             </a>
@@ -24,8 +24,8 @@
                     </ul>
                 </div>
 
-                <div class="widget widget-collapsible">
-                    <h3 class="widget-title">Size</h3>
+                <div class="widget">
+                    <h3  wire:click="actionSize('reset')" class="widget-title pointer">All Size</h3>
 
                     <ul class="widget-body filter-items">
                         @foreach($data_size as $key => $value)
@@ -35,8 +35,8 @@
                         @endforeach
                     </ul>
                 </div>
-                <div class="widget widget-collapsible">
-                    <h3 class="widget-title">Color</h3>
+                <div class="widget">
+                    <h3  wire:click="actionColor('reset')" class="widget-title pointer">All Color</h3>
                     <ul class="widget-body filter-items">
                         @foreach($data_color as $ckey => $cvalue)
                         <li class="{{ array_key_exists('c'.$ckey, $session_color) ? 'active' : '' }}"
@@ -45,8 +45,8 @@
                         @endforeach
                     </ul>
                 </div>
-                <div class="widget widget-collapsible">
-                    <h3 class="widget-title">Brands</h3>
+                <div class="widget">
+                    <h3 wire:click="actionBrand('reset')" class="widget-title pointer">All Brands</h3>
                     <ul class="widget-body filter-items">
                         @foreach($data_brand as $ckey => $cvalue)
                         <li class="{{ array_key_exists('c'.$ckey, $session_brand) ? 'active' : '' }}"
@@ -56,8 +56,8 @@
                     </ul>
                 </div>
 
-                <div class="widget widget-collapsible">
-                    <h3 class="widget-title">Province</h3>
+                <div class="widget">
+                    <h3 wire:click="actionProvince('reset')" class="widget-title pointer">All Province</h3>
                     <ul class="widget-body filter-items">
                         @foreach($data_province as $ckey => $cvalue)
                         <li class="{{ array_key_exists('c'.$ckey, $session_province) ? 'active' : '' }}"
@@ -67,8 +67,8 @@
                     </ul>
                 </div>
 
-                <div class="widget widget-collapsible">
-                    <h3 class="widget-title">Tags</h3>
+                <div class="widget">
+                    <h3 wire:click="actionTag('reset')" class="widget-title pointer">All Tags</h3>
                     <div class="widget-body pt-2">
                         @foreach($data_tag as $key => $value)
                         <button class="btn tag {{ array_key_exists($key, $session_tag) ? 'active' : '' }}"

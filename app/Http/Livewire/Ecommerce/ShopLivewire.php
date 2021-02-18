@@ -45,6 +45,11 @@ class ShopLivewire extends Component
     public $session_variant = [];
     public $session_tag = [];
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function updateProduct()
     {
         $detail = new ProductDetail();
@@ -76,7 +81,7 @@ class ShopLivewire extends Component
 
         if (session()->has('brand') && session()->get('brand')) {
             foreach (session()->get('brand') as $brand) {
-                $query->orWhere('item_product_item_brand_id',  ltrim($brand, 'c'));
+                $query->orWhere('item_product_item_brand_id', ltrim($brand, 'c'));
             }
         }
 
@@ -91,33 +96,28 @@ class ShopLivewire extends Component
             $query->where('item_product_item_category_id', array_keys(session()->get('category')));
         }
 
-        if(!empty($this->search)){
-            $query->where('item_product_name','like', "%$this->search%");
+        if (!empty($this->search)) {
+            $query->where('item_product_name', 'like', "%$this->search%");
         }
 
         $query->groupBy('item_product_id');
 
-        if(!empty($this->sort)){
-            if($this->sort == 'popular'){
+        if (!empty($this->sort)) {
+            if ($this->sort == 'popular') {
 
                 $query->orderByDesc('item_product_counter');
-            }
-            else if($this->sort == 'seller'){
-                
+            } else if ($this->sort == 'seller') {
+
                 $query->orderByDesc('item_product_sold');
-            }
-            else if($this->sort == 'date'){
-                
+            } else if ($this->sort == 'date') {
+
                 $query->orderByDesc('item_product_created_at');
-            }
-            else if($this->sort == 'low'){
-                
+            } else if ($this->sort == 'low') {
+
                 $query->orderBy('item_product_price');
-            }
-            else if($this->sort == 'high'){
+            } else if ($this->sort == 'high') {
                 $query->orderByDesc('item_product_price');
-            }
-            else{
+            } else {
                 $query->orderByDesc('item_product_id');
             }
         }
@@ -174,7 +174,12 @@ class ShopLivewire extends Component
 
     public function actionCategory($id)
     {
-        session(['category' => [$id => $id]]);
+        if ($id == 'clear') {
+            session()->forget('category');
+            $this->session_category = session()->get('category');
+        } else {
+            session(['category' => [$id => $id]]);
+        }
         $this->updateProduct();
     }
 
@@ -213,151 +218,167 @@ class ShopLivewire extends Component
 
     public function actionTag($key)
     {
-        if (session()->has('tag')) {
+        if ($key == 'clear') {
+            session()->forget('category');
+        } else {
+            if (session()->has('tag')) {
 
-            $data = session()->get('tag');
-            $collection = collect($data);
+                $data = session()->get('tag');
+                $collection = collect($data);
 
-            if ($collection->contains($key)) {
-                $data = $collection->except($key);
-            } else {
-
-                if ($data) {
-
-                    $data = $collection->merge([$key => $key]);
+                if ($collection->contains($key)) {
+                    $data = $collection->except($key);
                 } else {
 
-                    $data = collect([$key => $key]);
+                    if ($data) {
+
+                        $data = $collection->merge([$key => $key]);
+                    } else {
+
+                        $data = collect([$key => $key]);
+                    }
                 }
+
+                session(['tag' => $data->toArray()]);
+            } else {
+                session(['tag' => [$key => $key]]);
             }
 
-            session(['tag' => $data->toArray()]);
-        } else {
-            session(['tag' => [$key => $key]]);
         }
-
         $this->updateProduct();
     }
 
     public function actionColor($key)
     {
-        $key = 'c' . $key;
-        // session()->forget('color');
-        if (session()->has('color')) {
+        if ($key == 'clear') {
+            session()->forget('category');
+        } else {
+            $key = 'c' . $key;
+            // session()->forget('color');
+            if (session()->has('color')) {
 
-            $data = session()->get('color');
-            $collection = collect($data);
-            if ($collection->contains($key)) {
-                $data = $collection->forget($key);
-            } else {
-
-                if ($data) {
-
-                    $data = $collection->merge([$key => $key]);
+                $data = session()->get('color');
+                $collection = collect($data);
+                if ($collection->contains($key)) {
+                    $data = $collection->forget($key);
                 } else {
 
-                    $data = collect([$key => $key]);
+                    if ($data) {
+
+                        $data = $collection->merge([$key => $key]);
+                    } else {
+
+                        $data = collect([$key => $key]);
+                    }
                 }
+
+                session(['color' => $data->toArray()]);
+            } else {
+                session(['color' => [$key => $key]]);
             }
 
-            session(['color' => $data->toArray()]);
-        } else {
-            session(['color' => [$key => $key]]);
+            $this->session_color = session()->get('color');
+
         }
-
-        $this->session_color = session()->get('color');
-
         $this->updateProduct();
     }
 
     public function actionBrand($key)
     {
-        $key = 'c' . $key;
-        if (session()->has('brand')) {
+        if ($key == 'clear') {
+            session()->forget('category');
+        } else {
+            $key = 'c' . $key;
+            if (session()->has('brand')) {
 
-            $data = session()->get('brand');
-            $collection = collect($data);
-            if ($collection->contains($key)) {
-                $data = $collection->forget($key);
-            } else {
-
-                if ($data) {
-
-                    $data = $collection->merge([$key => $key]);
+                $data = session()->get('brand');
+                $collection = collect($data);
+                if ($collection->contains($key)) {
+                    $data = $collection->forget($key);
                 } else {
 
-                    $data = collect([$key => $key]);
+                    if ($data) {
+
+                        $data = $collection->merge([$key => $key]);
+                    } else {
+
+                        $data = collect([$key => $key]);
+                    }
                 }
+
+                session(['brand' => $data->toArray()]);
+            } else {
+                session(['brand' => [$key => $key]]);
             }
 
-            session(['brand' => $data->toArray()]);
-        } else {
-            session(['brand' => [$key => $key]]);
+            $this->session_brand = session()->get('brand');
         }
-
-        $this->session_brand = session()->get('brand');
-
         $this->updateProduct();
     }
 
     public function actionProvince($key)
     {
-        $key = 'c' . $key;
-        // session()->forget('color');
-        if (session()->has('province')) {
+        if ($key == 'clear') {
+            session()->forget('category');
+        } else {
+            $key = 'c' . $key;
+            // session()->forget('color');
+            if (session()->has('province')) {
 
-            $data = session()->get('province');
-            $collection = collect($data);
-            if ($collection->contains($key)) {
-                $data = $collection->forget($key);
-            } else {
-
-                if ($data) {
-
-                    $data = $collection->merge([$key => $key]);
+                $data = session()->get('province');
+                $collection = collect($data);
+                if ($collection->contains($key)) {
+                    $data = $collection->forget($key);
                 } else {
 
-                    $data = collect([$key => $key]);
+                    if ($data) {
+
+                        $data = $collection->merge([$key => $key]);
+                    } else {
+
+                        $data = collect([$key => $key]);
+                    }
                 }
+
+                session(['province' => $data->toArray()]);
+            } else {
+                session(['province' => [$key => $key]]);
             }
 
-            session(['province' => $data->toArray()]);
-        } else {
-            session(['province' => [$key => $key]]);
+            $this->session_province = session()->get('province');
         }
-
-        $this->session_province = session()->get('province');
-
         $this->updateProduct();
     }
 
     public function actionSize($key)
     {
-        // session()->forget('color');
-        if (session()->has('size')) {
+        if ($key == 'clear') {
+            session()->forget('category');
+        } else {
+            if (session()->has('size')) {
 
-            $data = session()->get('size');
-            $collection = collect($data);
-            if ($collection->contains($key)) {
-                $data = $collection->forget($key);
-            } else {
-
-                if ($data) {
-
-                    $data = $collection->merge([$key => $key]);
+                $data = session()->get('size');
+                $collection = collect($data);
+                if ($collection->contains($key)) {
+                    $data = $collection->forget($key);
                 } else {
 
-                    $data = collect([$key => $key]);
+                    if ($data) {
+
+                        $data = $collection->merge([$key => $key]);
+                    } else {
+
+                        $data = collect([$key => $key]);
+                    }
                 }
+
+                session(['size' => $data->toArray()]);
+            } else {
+                session(['size' => [$key => $key]]);
             }
 
-            session(['size' => $data->toArray()]);
-        } else {
-            session(['size' => [$key => $key]]);
+            $this->session_size = session()->get('size');
         }
-
-        $this->session_size = session()->get('size');
-
         $this->updateProduct();
     }
 }
