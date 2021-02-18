@@ -49,12 +49,11 @@
 
             </figure>
             <div class="product-details">
-
                 <div class="product-cat">
-                    <a href="shop-grid-3col.html">{{ $new->item_category_name }}</a>
+                    <a rel="nofollow" href="{{ route('category', ['slug' => $new->item_product_item_category_id]) }}">{{ $new->item_category_name }}</a>
                 </div>
                 <h3 class="product-name">
-                    <a href="product.html">{{ $new->item_product_name }}</a>
+                    <a href="{{ route('product', ['slug' => $new->item_product_slug]) }}">{{ $new->item_product_name }}</a>
                 </h3>
                 <div class="product-price">
                     <ins class="new-price">Rp.{{ Helper::createRupiah($new->item_product_price) }}</ins>

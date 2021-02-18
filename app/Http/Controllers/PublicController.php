@@ -353,24 +353,26 @@ class PublicController extends Controller
     public function category($slug = false)
     {
         if ($slug) {
-            $category = new CategoryRepository();
-            $data_category = $category->slugRepository($slug);
-            $color = Helper::createOption(new ColorRepository(), false, true)->pluck('item_color_code');
-            $size = Helper::createOption(new SizeRepository(), false, true)->pluck('item_size_code');
-            $tag = Helper::createOption(new TagRepository(), false, true)->pluck('item_tag_slug');
-            $brand = Helper::createOption(new BrandRepository(), false, true)->pluck('item_brand_slug', 'item_brand_name');
 
-            $product = ProductRepository::where('item_product_item_category_id', $data_category->item_category_id)->paginate(9);
-            return View(Helper::setViewFrontend('shop'))->with([
-                'color' => $color,
-                'size' => $size,
-                'tag' => $tag,
-                'brand' => $brand,
-                'product' => $product,
-            ]);
+            session(['category' => [$slug => $slug]]);
+            // $category = new CategoryRepository();
+            // $data_category = $category->slugRepository($slug);
+            // $color = Helper::createOption(new ColorRepository(), false, true)->pluck('item_color_code');
+            // $size = Helper::createOption(new SizeRepository(), false, true)->pluck('item_size_code');
+            // $tag = Helper::createOption(new TagRepository(), false, true)->pluck('item_tag_slug');
+            // $brand = Helper::createOption(new BrandRepository(), false, true)->pluck('item_brand_slug', 'item_brand_name');
+
+            // $product = ProductRepository::where('item_product_item_category_id', $data_category->item_category_id)->paginate(9);
+            // return View(Helper::setViewFrontend('shop'))->with([
+            //     'color' => $color,
+            //     'size' => $size,
+            //     'tag' => $tag,
+            //     'brand' => $brand,
+            //     'product' => $product,
+            // ]);
         }
 
-        return View(Helper::setViewFrontend(__FUNCTION__));
+        return redirect()->route('shop');
     }
 
     public function cart()

@@ -45,10 +45,10 @@
                 </div>
             </div>
             <figure class="product-media">
-                <a href="#">
+                <a href="{{ route('product', ['slug' => $product_slug]) }}">
                     <img src="{{ Helper::files('product/'.$product_image) }}" alt="product" width="90" height="90" />
                 </a>
-                <button class="btn btn-link btn-close">
+                <button wire:click="actionDelete('{{ $cart->id }}')" class="btn btn-link btn-close">
                     <i class="fas fa-times"></i>
                 </button>
             </figure>
