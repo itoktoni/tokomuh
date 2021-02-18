@@ -184,15 +184,6 @@ class ShopLivewire extends Component
             $this->murah = $slug;
         }
         $this->updateProduct();
-        $category = CategoryFacades::where('item_category_slug', $slug)->first();
-        if($category){
-
-            SEOTools::setTitle($category->item_category_name);
-            SEOTools::setDescription($category->item_category_description);
-            SEOTools::opengraph()->setUrl(route('category', ['slug' => $category->item_category_slug]));
-            SEOTools::opengraph()->addProperty('type', 'articles');
-            SEOTools::jsonLd()->addImage(Helper::files('category/' . $category->item_category_image));
-        }
     }
 
     public function actionClean()

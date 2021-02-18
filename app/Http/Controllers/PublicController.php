@@ -175,11 +175,17 @@ class PublicController extends Controller
 
         $data = $product->get();
 
+        SEOTools::setTitle('Belanja murah di '.config('website.name'));
+        SEOTools::setDescription(config('website.seo'));
+        SEOTools::opengraph()->setUrl(route('shop'));
+        SEOTools::opengraph()->addProperty('type', 'articles');
+        SEOTools::jsonLd()->addImage(Helper::files('logo/'.config('website.logo')));
+
         if(request()->has('murah')){
             $category = CategoryFacades::where('item_category_slug', request()->get('murah'))->first();
             if($category){
 
-                SEOTools::setTitle($category->item_category_name);
+                SEOTools::setTitle('Belanja '.$category->item_category_name);
                 SEOTools::setDescription($category->item_category_description);
                 SEOTools::opengraph()->setUrl(route('category', ['slug' => $category->item_category_slug]));
                 SEOTools::opengraph()->addProperty('type', 'articles');
@@ -1054,7 +1060,7 @@ class PublicController extends Controller
             $love = WishlistFacades::isLoveProduct($id_product) ? true : false;
         }
 
-        SEOTools::setTitle($product->item_product_name);
+        SEOTools::setTitle('Jual '.$product->item_product_name);
         SEOTools::setDescription($product->item_product_seo);
         SEOTools::opengraph()->setUrl(route('product', ['slug' => $product->item_product_slug]));
         SEOTools::opengraph()->addProperty('type', 'articles');

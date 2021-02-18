@@ -150,7 +150,7 @@
                     </figure>
                     <div class="product-details">
                         <div class="product-cat">
-                            <a class="pointer" wire:click="actionCategory('{{ $product->item_product_item_category_id }}')">{{ $product->item_category_name }}</a>
+                            <a class="pointer" wire:click="actionCategory('{{ $product->item_category_slug }}')">{{ $product->item_category_name }}</a>
                         </div>
                         <h3 class="product-name">
                             <a href="{{ route('product', ['slug' => $product->item_product_slug]) }}">{{ $product->item_product_name }}</a>
