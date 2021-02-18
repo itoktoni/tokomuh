@@ -25,12 +25,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => '3c5fe3e9ce3922b0bfac2e8465da54937a3c4b64',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -192,6 +192,15 @@ private static $installed = array (
       array (
         0 => '*',
       ),
+    ),
+    'dnoegel/php-xdg-base-dir' => 
+    array (
+      'pretty_version' => 'v0.1.1',
+      'version' => '0.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8f8a6e48c5ecb0f991c2fdcf5f154a47d85f9ffd',
     ),
     'doctrine/inflector' => 
     array (
@@ -603,12 +612,12 @@ private static $installed = array (
     ),
     'laravel/laravel' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => '3c5fe3e9ce3922b0bfac2e8465da54937a3c4b64',
     ),
     'laravel/sanctum' => 
     array (
@@ -618,6 +627,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'eb191ddfc3ec04bbead33593bf982e871095f25c',
+    ),
+    'laravel/tinker' => 
+    array (
+      'pretty_version' => 'v2.6.0',
+      'version' => '2.6.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'daae1c43f1300fe88c05d83db6f3d8f76677ad88',
     ),
     'laravel/ui' => 
     array (
@@ -793,6 +811,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '528783b188bdb853eb21239b1722831e0f000a8d',
+    ),
+    'nikic/php-parser' => 
+    array (
+      'pretty_version' => 'v4.10.4',
+      'version' => '4.10.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c6d052fc58cb876152f89f532b95a8d7907e7f0e',
     ),
     'nwidart/laravel-modules' => 
     array (
@@ -1077,6 +1104,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '408d5eafb83c57f6365a3ca330ff23aa4a5fa39b',
+    ),
+    'psy/psysh' => 
+    array (
+      'pretty_version' => 'v0.10.6',
+      'version' => '0.10.6.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6f990c19f91729de8b31e639d6e204ea59f19cf3',
     ),
     'ralouphie/getallheaders' => 
     array (

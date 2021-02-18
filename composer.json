@@ -27,6 +27,7 @@
         "larapack/config-writer": "1.*",
         "laravel/framework": "^7.0",
         "laravel/sanctum": "^2.0",
+        "laravel/tinker": "^2.6",
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.0",
         "laravolt/avatar": "^4.0",
