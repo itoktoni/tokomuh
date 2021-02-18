@@ -5,9 +5,13 @@
         SKU : <span
             class="product-sku">{{ !empty($data->item_product_sku) ? $data->item_product_sku : 'Default' }}</span>
         BRAND :
-        <a href="{{ route('category', ['slug' => $data->item_product_item_category_id]) }}">
             <span class="product-brand">
                 {{ Str::upper($data->item_brand_name ?? $data->brand->item_brand_name) }}
+            </span>
+        CATEGORY :
+        <a href="{{ route('category', ['slug' => $data->item_category_slug ?? $data->category->item_category_slug]) }}">
+            <span class="product-brand">
+                {{ Str::upper($data->item_category_name ?? $data->category->item_category_name) }}
             </span>
         </a>
     </div>

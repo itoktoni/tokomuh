@@ -13,11 +13,11 @@
                 <div class="widget">
                     <h3 wire:click="actionCategory('clear')" class="widget-title pointer">All Categories</h3>
                     <ul class="widget-body filter-items search-ul">
-                        @foreach($data_category as $category)
+                        @foreach($data_category as $cat)
                         <li>
-                            <a class="category-filter {{ isset($session_category) && array_key_exists($category->item_category_id, $session_category) ? 'active' : '' }}"
-                                wire:click="actionCategory('{{ $category->item_category_id }}')">
-                                {{ $category->item_category_name }}
+                            <a class="category-filter {{ $cat->item_category_slug == $murah ? 'active' : '' }}"
+                                wire:click="actionCategory('{{ $cat->item_category_slug }}')">
+                                {{ $cat->item_category_name }}
                             </a>
                         </li>
                         @endforeach

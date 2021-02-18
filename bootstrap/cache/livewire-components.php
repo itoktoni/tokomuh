@@ -5,6 +5,7 @@
   'ecommerce.category' => 'App\\Http\\Livewire\\Ecommerce\\Category',
   'ecommerce.homepage-livewire' => 'App\\Http\\Livewire\\Ecommerce\\HomepageLivewire',
   'ecommerce.love-livewire' => 'App\\Http\\Livewire\\Ecommerce\\LoveLivewire',
+  'ecommerce.meta-livewire' => 'App\\Http\\Livewire\\Ecommerce\\MetaLivewire',
   'ecommerce.minicart-livewire' => 'App\\Http\\Livewire\\Ecommerce\\MinicartLivewire',
   'ecommerce.newproduct-livewire' => 'App\\Http\\Livewire\\Ecommerce\\NewproductLivewire',
   'ecommerce.product-livewire' => 'App\\Http\\Livewire\\Ecommerce\\ProductLivewire',

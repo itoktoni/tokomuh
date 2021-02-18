@@ -50,7 +50,7 @@
             </figure>
             <div class="product-details">
                 <div class="product-cat">
-                    <a rel="nofollow" href="{{ route('category', ['slug' => $new->item_product_item_category_id]) }}">{{ $new->item_category_name }}</a>
+                    <a href="{{ route('category', ['slug' => $new->item_category_slug]) }}">{{ $new->item_category_name }}</a>
                 </div>
                 <h3 class="product-name">
                     <a href="{{ route('product', ['slug' => $new->item_product_slug]) }}">{{ $new->item_product_name }}</a>

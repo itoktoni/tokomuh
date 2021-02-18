@@ -3,8 +3,10 @@
 namespace App\Http\Livewire\Ecommerce;
 
 use App\Dao\Facades\BranchFacades;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Modules\Item\Dao\Facades\CategoryFacades;
 use Modules\Item\Dao\Facades\ProductFacades;
 use Modules\Item\Dao\Facades\WishlistFacades;
 use Modules\Item\Dao\Models\ProductDetail;
@@ -27,6 +29,8 @@ class ShopLivewire extends Component
 
     public $search;
     public $sort;
+    public $murah;
+    protected $queryString = ['murah' => ['except' => '']];
 
     public $data_tag = [];
     public $data_color = [];
@@ -37,13 +41,18 @@ class ShopLivewire extends Component
     public $data_province = [];
     public $data_wishlist = [];
 
-    public $session_category = [];
+    // public $session_category = [];
     public $session_color = [];
     public $session_size = [];
     public $session_brand = [];
     public $session_province = [];
     public $session_variant = [];
     public $session_tag = [];
+
+    public function mount()
+    {
+        $this->fill(request()->only('murah'));
+    }
 
     public function updatingSearch()
     {
@@ -92,12 +101,12 @@ class ShopLivewire extends Component
             }
         }
 
-        if (session()->has('category')) {
-            $query->where('item_product_item_category_id', array_keys(session()->get('category')));
-        }
-
         if (!empty($this->search)) {
             $query->where('item_product_name', 'like', "%$this->search%");
+        }
+
+        if (!empty($this->murah)) {
+            $query->where('item_category_slug', $this->murah);
         }
 
         $query->groupBy('item_product_id');
@@ -122,8 +131,6 @@ class ShopLivewire extends Component
             }
         }
 
-        // dd($query->toSql());
-
         return $this->data_product = $query->paginate(config('website.pagination'));
     }
 
@@ -143,9 +150,6 @@ class ShopLivewire extends Component
             $this->data_wishlist = WishlistFacades::getUserRepository();
         }
 
-        if (session()->has('category')) {
-            $this->session_category = session()->get('category');
-        }
         if (session()->has('color')) {
             $this->session_color = session()->get('color');
         }
@@ -172,15 +176,23 @@ class ShopLivewire extends Component
         ]);
     }
 
-    public function actionCategory($id)
+    public function actionCategory($slug)
     {
-        if ($id == 'clear') {
-            session()->forget('category');
-            $this->session_category = session()->get('category');
+        if ($slug == 'clear') {
+            $this->murah = null;
         } else {
-            session(['category' => [$id => $id]]);
+            $this->murah = $slug;
         }
         $this->updateProduct();
+        $category = CategoryFacades::where('item_category_slug', $slug)->first();
+        if($category){
+
+            SEOTools::setTitle($category->item_category_name);
+            SEOTools::setDescription($category->item_category_description);
+            SEOTools::opengraph()->setUrl(route('category', ['slug' => $category->item_category_slug]));
+            SEOTools::opengraph()->addProperty('type', 'articles');
+            SEOTools::jsonLd()->addImage(Helper::files('category/' . $category->item_category_image));
+        }
     }
 
     public function actionClean()
@@ -191,13 +203,15 @@ class ShopLivewire extends Component
         session()->forget('size');
         session()->forget('brand');
         session()->forget('province');
-        $this->session_category = [];
         $this->session_tag = [];
         $this->session_color = [];
         $this->session_brand = [];
         $this->session_size = [];
         $this->session_province = [];
 
+        $this->search = null;
+        $this->murah = null;
+        $this->resetPage();
         $this->updateProduct();
     }
 

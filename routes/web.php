@@ -106,6 +106,9 @@ Route::get('/', 'PublicController@index')->name('beranda');
 Route::get('/slider/{slug}', 'PublicController@slider')->name('single_slider');
 
 Route::match(['get', 'post'], 'belanja', 'PublicController@shop')->name('shop');
+Route::get('belanja?murah={slug}', 'PublicController@shop')->name('category');
+// Route::get('/category', 'PublicController@category')->name('category');
+
 Route::get('/product/{type}/{slug}', 'PublicController@shop')->name('filters');
 
 Route::get('/brand/{brand}', 'PublicController@shop')->name('filter_brand');
@@ -123,7 +126,6 @@ Route::match(['get', 'post'], 'confirmation', 'PublicController@confirmation')->
 Route::get('/delete/{id}', 'PublicController@delete')->name('delete');
 Route::get('/email/{id}', 'PublicController@email')->name('email');
 
-Route::get('/category', 'PublicController@category')->name('category');
 
 Route::get('/promo', 'PublicController@promo')->name('promo');
 Route::get('/promo/{slug}', 'PublicController@promo')->name('promo_page');

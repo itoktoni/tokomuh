@@ -54,6 +54,7 @@ use Modules\Sales\Http\Services\LanggananService;
 use Modules\Sales\Http\Services\PublicService;
 use Plugin\Helper;
 use Artesaos\SEOTools\Facades\SEOTools;
+use Modules\Item\Dao\Facades\CategoryFacades;
 
 class PublicController extends Controller
 {
@@ -173,6 +174,18 @@ class PublicController extends Controller
         }
 
         $data = $product->get();
+
+        if(request()->has('murah')){
+            $category = CategoryFacades::where('item_category_slug', request()->get('murah'))->first();
+            if($category){
+
+                SEOTools::setTitle($category->item_category_name);
+                SEOTools::setDescription($category->item_category_description);
+                SEOTools::opengraph()->setUrl(route('category', ['slug' => $category->item_category_slug]));
+                SEOTools::opengraph()->addProperty('type', 'articles');
+                SEOTools::jsonLd()->addImage(Helper::files('category/'.$category->item_category_image));
+            }
+        }
 
         return View(Helper::setViewFrontend(__FUNCTION__))->with($this->share([
             'product' => $data,
@@ -1040,6 +1053,12 @@ class PublicController extends Controller
         if(auth()->check()){
             $love = WishlistFacades::isLoveProduct($id_product) ? true : false;
         }
+
+        SEOTools::setTitle($product->item_product_name);
+        SEOTools::setDescription($product->item_product_seo);
+        SEOTools::opengraph()->setUrl(route('product', ['slug' => $product->item_product_slug]));
+        SEOTools::opengraph()->addProperty('type', 'articles');
+        SEOTools::jsonLd()->addImage(Helper::files('product/'.$product->item_product_image));
 
         return View(Helper::setViewFrontend(__FUNCTION__))->with($this->share([
            'slug' => $slug,
