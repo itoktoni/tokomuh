@@ -4,8 +4,12 @@
     <div class="product-meta">
         SKU : <span
             class="product-sku">{{ !empty($data->item_product_sku) ? $data->item_product_sku : 'Default' }}</span>
-        BRAND : <span
-            class="product-brand">{{ Str::upper($data->item_brand_name ?? $data->brand->item_brand_name) }}</span>
+        BRAND :
+        <a href="{{ route('category', ['slug' => $data->item_product_item_category_id]) }}">
+            <span class="product-brand">
+                {{ Str::upper($data->item_brand_name ?? $data->brand->item_brand_name) }}
+            </span>
+        </a>
     </div>
     <div class="product-price">{{ $mask_price }}</div>
 
