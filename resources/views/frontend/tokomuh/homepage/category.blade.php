@@ -22,14 +22,14 @@
                         }">
         @forelse($categories as $category)
         <div class="category category-light category-absolute">
-            <a rel="nofollow" href="{{ route('category', ['slug' => $category->item_product_item_category_id]) }}">
+            <a rel="nofollow" href="{{ route('category', ['slug' => $category->item_category_id]) }}">
                 <figure class="category-media">
                     <img src="{{ Helper::files('category/'.$category->item_category_image) }}" alt="{{ $category->item_category_name }}" width="280"
                         height="245" />
                 </figure>
             </a>
             <div class="category-content">
-                <h4 class="category-name">{{ $category->item_category_name }}</h4>
+                <a rel="nofollow" href="{{ route('category', ['slug' => $category->item_category_id]) }}"><h4 class="category-name">{{ $category->item_category_name }}</h4></a>
             </div>
         </div>
         @empty
