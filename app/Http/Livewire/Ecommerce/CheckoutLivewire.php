@@ -176,6 +176,7 @@ class CheckoutLivewire extends Component
             'name.required' => 'Please input name in Cart',
             'address.required' => 'Please input address in Cart',
             'area.required' => 'Please input Shipping area in Cart',
+            'ongkir.min:1' => 'Please Input Shipping area'
         ], [
             'checkout.*.branch_ongkir' => 'Please Select Courier'
         ]);

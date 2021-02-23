@@ -6,7 +6,8 @@
                 <div class="sticky-sidebar">
                     @if(session()->has('checkout'))
                     @foreach(session('checkout') as $cart)
-                    <div class="summary mb-6 {{ $errors->has('checkout.'.$cart->branch_id.'.branch_ongkir') ? 'error' : '' }}">
+                    <div
+                        class="summary mb-6 {{ $errors->has('checkout.'.$cart->branch_id.'.branch_ongkir') ? 'error' : '' }}">
                         <table class="order-table">
                             <thead>
                                 <tr>
@@ -138,10 +139,20 @@
 
                         <section class="summary-information">
                             <h2 class="title title-simple text-left">{{ session('name') ?? '' }}</h2>
-                            <p class="text-grey">{{ session('address') ?? '' }}</p>
+                            @if(session()->has('address'))
+                            <p class="text-grey">{{ session('address')</p>
+                            @endif
+                            @if(session()->has('area'))
                             <p class="text-grey">
-                                {{ session()->has('area') ? Helper::getSingleArea(session('area'), true) : ''  }}</p>
-                            <p class="text-grey">{{ session('phone') ?? '' }} / {{ session('email') ?? '' }}</p>
+                                {{ Helper::getSingleArea(session('area'), true) ?? '' }}
+                            </p>
+                            @endif
+                            @if(session()->has('phone'))
+                            <p class="text-grey">{{ session('phone') ?? '' }}</p>
+                            @endif
+                            @if(session()->has('email'))
+                            <p class="text-grey">{{ session('email') ?? '' }}</p>
+                            @endif
                             <textarea wire:model.lazy="notes" class="form-control mb-2 mt-3" rows="3"
                                 placeholder="Notes"></textarea>
                         </section>
