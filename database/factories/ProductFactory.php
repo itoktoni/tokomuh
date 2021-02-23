@@ -4,7 +4,6 @@
 
 use bheller\ImagesGenerator\ImagesGeneratorProvider;
 use Faker\Generator as Faker;
-use Laravolt\Avatar\Facade as Avatar;
 use Modules\Item\Dao\Models\Product;
 use Modules\Item\Dao\Models\ProductDetail;
 
@@ -15,7 +14,7 @@ $factory->define(Product::class, function (Faker $faker) {
 
     $faker->addProvider(new ImagesGeneratorProvider($faker));
     $image = $faker->imageGenerator('public/files/product', 300, 400, 'jpg', false, $name, $faker->hexcolor, $faker->hexcolor);
-    return [
+    return[
         'item_product_slug' => $slug,
         'item_product_min_stock' => 1,
         'item_product_max_stock' => 1,
@@ -62,8 +61,8 @@ $factory->define(Product::class, function (Faker $faker) {
         'item_product_min_order' => $faker->numberBetween(1, 10),
         'item_product_max_order' => 0,
         'item_product_flag_name' => $faker->word,
-        'item_product_flag_color' => $faker->colorName,
-        'item_product_flag_background' => $faker->colorName,
+        'item_product_flag_color' => $faker->hexcolor,
+        'item_product_flag_background' => $faker->hexcolor,
         'item_product_page_content_1' => $faker->text(1000),
         'item_product_page_content_2' => $faker->text(1000),
         'item_product_page_content_3' => $faker->text(1000),
@@ -76,15 +75,5 @@ $factory->define(Product::class, function (Faker $faker) {
         'item_product_page_seo' => $faker->sentence(10),
         'item_product_sold' => $faker->numberBetween(50, 100),
         'item_product_is_variant' => 0,
-    ];
-});
-
-$factory->define(ProductDetail::class, function (Faker $faker) {
-    return [
-      'Username' => $faker->unique()->userName,
-      'Password' => bcrypt('test'),
-      'item_detail_branch_id' => $faker->unique()->safeEmail,
-      'item_detail_product_name' => Factory(Product::class)->create()->item_product_name,
-      'item_detail_product_id' => Factory(Product::class)->create()->item_product_id,
     ];
 });

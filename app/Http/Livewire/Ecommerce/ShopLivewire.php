@@ -94,9 +94,9 @@ class ShopLivewire extends Component
             }
         }
 
-        if (session()->has('province') && session()->get('province')) {
+        if (session()->has('list_province') && session()->get('list_province')) {
             $query->join(BranchFacades::getTable(), BranchFacades::getKeyName(), 'item_detail_branch_id');
-            foreach (session()->get('province') as $province) {
+            foreach (session()->get('list_province') as $province) {
                 $query->orWhere('branch_rajaongkir_province_id', ltrim($province, 'c'));
             }
         }
@@ -125,8 +125,10 @@ class ShopLivewire extends Component
 
                 $query->orderBy('item_product_price');
             } else if ($this->sort == 'high') {
+
                 $query->orderByDesc('item_product_price');
             } else {
+
                 $query->orderByDesc('item_product_id');
             }
         }
@@ -162,8 +164,8 @@ class ShopLivewire extends Component
         if (session()->has('tag')) {
             $this->session_tag = session()->get('tag');
         }
-        if (session()->has('province')) {
-            $this->session_province = session()->get('province');
+        if (session()->has('list_province')) {
+            $this->session_province = session()->get('list_province');
         }
         if (session()->has('brand')) {
             $this->session_brand = session()->get('brand');
@@ -178,7 +180,7 @@ class ShopLivewire extends Component
 
     public function actionCategory($slug)
     {
-        if ($slug == 'clear') {
+        if ($slug == 'reset') {
             $this->murah = null;
         } else {
             $this->murah = $slug;
@@ -193,7 +195,7 @@ class ShopLivewire extends Component
         session()->forget('tag');
         session()->forget('size');
         session()->forget('brand');
-        session()->forget('province');
+        session()->forget('list_province');
         $this->session_tag = [];
         $this->session_color = [];
         $this->session_brand = [];
@@ -223,8 +225,9 @@ class ShopLivewire extends Component
 
     public function actionTag($key)
     {
-        if ($key == 'clear') {
-            session()->forget('category');
+        if ($key == 'reset') {
+            session()->forget('tag');
+            $this->session_size = [];
         } else {
             if (session()->has('tag')) {
 
@@ -255,11 +258,10 @@ class ShopLivewire extends Component
 
     public function actionColor($key)
     {
-        if ($key == 'clear') {
-            session()->forget('category');
+        if ($key == 'reset') {
+            session()->forget('color');
         } else {
             $key = 'c' . $key;
-            // session()->forget('color');
             if (session()->has('color')) {
 
                 $data = session()->get('color');
@@ -290,8 +292,8 @@ class ShopLivewire extends Component
 
     public function actionBrand($key)
     {
-        if ($key == 'clear') {
-            session()->forget('category');
+        if ($key == 'reset') {
+            session()->forget('brand');
         } else {
             $key = 'c' . $key;
             if (session()->has('brand')) {
@@ -323,14 +325,13 @@ class ShopLivewire extends Component
 
     public function actionProvince($key)
     {
-        if ($key == 'clear') {
-            session()->forget('category');
+        if ($key == 'reset') {
+            session()->forget('list_province');
         } else {
             $key = 'c' . $key;
-            // session()->forget('color');
-            if (session()->has('province')) {
+            if (session()->has('list_province')) {
 
-                $data = session()->get('province');
+                $data = session()->get('list_province');
                 $collection = collect($data);
                 if ($collection->contains($key)) {
                     $data = $collection->forget($key);
@@ -345,20 +346,20 @@ class ShopLivewire extends Component
                     }
                 }
 
-                session(['province' => $data->toArray()]);
+                session(['list_province' => $data->toArray()]);
             } else {
-                session(['province' => [$key => $key]]);
+                session(['list_province' => [$key => $key]]);
             }
 
-            $this->session_province = session()->get('province');
+            $this->session_province = session()->get('list_province');
         }
         $this->updateProduct();
     }
 
     public function actionSize($key)
     {
-        if ($key == 'clear') {
-            session()->forget('category');
+        if ($key == 'reset') {
+            session()->forget('size');
         } else {
             if (session()->has('size')) {
 

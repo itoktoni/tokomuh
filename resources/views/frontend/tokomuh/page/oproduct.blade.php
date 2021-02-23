@@ -11,13 +11,11 @@
                         <div class="product-single-carousel owl-carousel owl-theme owl-nav-inner row cols-1">
                             <figure class="product-image">
                                 <img src="{{ Helper::files('product/'.$oproduct->item_product_image) }}"
-                                    data-zoom-image="{{ Helper::files('product/'.$oproduct->item_product_image) }}"
                                     alt="{{ $oproduct->item_product_name }}" width="800" height="900">
                             </figure>
                             @foreach($images as $image)
                             <figure class="product-image">
                                 <img src="{{ Helper::files('product_detail/thumbnail_'.$image->item_product_image_file) }}"
-                                    data-zoom-image="{{ Helper::files('product_detail/'.$image->item_product_image_file) }}"
                                     alt="Women's Brown Leather Backpacks" width="800" height="900">
                             </figure>
                             @endforeach

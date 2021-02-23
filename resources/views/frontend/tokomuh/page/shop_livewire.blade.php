@@ -11,7 +11,7 @@
                     <a wire:click="actionClean()" class="filter-clean text-primary category-filter">Clean All</a>
                 </div>
                 <div class="widget">
-                    <h3 wire:click="actionCategory('clear')" class="widget-title pointer">All Categories</h3>
+                    <h3 wire:click="actionCategory('reset')" class="widget-title pointer">All Categories</h3>
                     <ul class="widget-body filter-items search-ul">
                         @foreach($data_category as $cat)
                         <li>
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="widget">
-                    <h3  wire:click="actionSize('reset')" class="widget-title pointer">All Size</h3>
+                    <h3 class="widget-title pointer">All Size</h3>
 
                     <ul class="widget-body filter-items">
                         @foreach($data_size as $key => $value)
@@ -36,7 +36,7 @@
                     </ul>
                 </div>
                 <div class="widget">
-                    <h3  wire:click="actionColor('reset')" class="widget-title pointer">All Color</h3>
+                    <h3 class="widget-title pointer">All Color</h3>
                     <ul class="widget-body filter-items">
                         @foreach($data_color as $ckey => $cvalue)
                         <li class="{{ array_key_exists('c'.$ckey, $session_color) ? 'active' : '' }}"
@@ -46,7 +46,7 @@
                     </ul>
                 </div>
                 <div class="widget">
-                    <h3 wire:click="actionBrand('reset')" class="widget-title pointer">All Brands</h3>
+                    <h3 class="widget-title pointer">All Brands</h3>
                     <ul class="widget-body filter-items">
                         @foreach($data_brand as $ckey => $cvalue)
                         <li class="{{ array_key_exists('c'.$ckey, $session_brand) ? 'active' : '' }}"
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="widget">
-                    <h3 wire:click="actionProvince('reset')" class="widget-title pointer">All Province</h3>
+                    <h3 class="widget-title pointer">All Province</h3>
                     <ul class="widget-body filter-items">
                         @foreach($data_province as $ckey => $cvalue)
                         <li class="{{ array_key_exists('c'.$ckey, $session_province) ? 'active' : '' }}"
@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="widget">
-                    <h3 wire:click="actionTag('reset')" class="widget-title pointer">All Tags</h3>
+                    <h3 class="widget-title pointer">All Tags</h3>
                     <div class="widget-body pt-2">
                         @foreach($data_tag as $key => $value)
                         <button class="btn tag {{ array_key_exists($key, $session_tag) ? 'active' : '' }}"
@@ -108,10 +108,10 @@
         </nav>
 
         <div class="header-search mb-5">
-            <form action="#" method="get" class="input-wrapper">
+            <div class="input-wrapper">
                 <input type="text" class="form-control" wire:model.debounce.500ms="search" value="{{ $search }}" id="search" placeholder="Search your keyword...">
                 <button class="btn btn-sm btn-search" type="submit"><i class="d-icon-search"></i></button>
-            </form>
+            </div>
         </div>
 
         <div class="row cols-2 cols-sm-3 product-wrapper">

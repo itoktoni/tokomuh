@@ -100,6 +100,7 @@ return [
     */
 
     'locale' => 'en',
+    'faker_locale' => 'id_ID',
 
     /*
     |--------------------------------------------------------------------------
@@ -208,6 +209,7 @@ return [
         Webklex\IMAP\Providers\LaravelServiceProvider::class,
         CarlosOCarvalho\Providers\CloudinaryServiceProvider::class,
         Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
     ],
 
     /*

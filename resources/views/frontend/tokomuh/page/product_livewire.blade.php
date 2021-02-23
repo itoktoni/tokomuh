@@ -5,9 +5,9 @@
         SKU : <span
             class="product-sku">{{ !empty($data->item_product_sku) ? $data->item_product_sku : 'Default' }}</span>
         BRAND :
-            <span class="product-brand">
-                {{ Str::upper($data->item_brand_name ?? $data->brand->item_brand_name) }}
-            </span>
+        <span class="product-brand">
+            {{ Str::upper($data->item_brand_name ?? $data->brand->item_brand_name) }}
+        </span>
         CATEGORY :
         <a href="{{ route('category', ['slug' => $data->item_category_slug ?? $data->category->item_category_slug]) }}">
             <span class="product-brand">
@@ -27,6 +27,13 @@
         </i> Wishlist
     </a>
     @endauth
+
+    <div class="product-form" style="width: 70%">
+        <label class="text-center">Weight:</label>
+        <span>
+            {{ $data->item_product_weight }}gr
+        </span>
+    </div>
 
     @if($data_branch)
     <div class="product-form">
@@ -87,6 +94,11 @@
         </div>
     </div>
     @endif
+
+    <div class="product-form product-qty" style="width: 70%">
+        <label class="text-center">Notes:</label>
+        <textarea wire:model="notes" class="form-group" rows="3"></textarea>
+    </div>
 
     <hr class="product-divider mt-5">
 

@@ -68,7 +68,7 @@
         <!-- End of Products  -->
         <div class="cart-total">
             <label>Sub Total:</label>
-            <span class="price">{{ Helper::createRupiah(Cart::getTotal())}}</span>
+            <span class="price">{{ Helper::createRupiah(Cart::getSubTotal()) }}</span>
         </div>
         @if($coupon = Cart::getConditions()->first())
         <div class="cart-total">
@@ -81,9 +81,16 @@
         </div>
         @endif
         <!-- End of Cart Total -->
+        @if(session()->has('area'))
         <div class="cart-action">
             <a href="{{ route('checkout') }}" class="btn btn-dark"><span>Checkout</span></a>
         </div>
+        @else
+        <div class="cart-action">
+            <a href="{{ route('cart') }}" class="btn btn-dark"><span>Confirm Cart</span></a>
+        </div>
+        @endif
+
         <!-- End of Cart Action -->
     </div>
     <!-- End of Dropdown Box -->

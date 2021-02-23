@@ -1,8 +1,9 @@
 <div class="container mb-2">
     <div class="row gutter-lg">
-        <div class="col-lg-12 col-md-12">
+    
+        @if(!Cart::isEmpty())
+        <div class="col-lg-8 col-md-8">
             <table class="shop-table cart-table mt-2">
-
                 <tbody>
 
                     @php
@@ -23,8 +24,9 @@
 
                     @endphp
 
-                    @if(!Cart::isEmpty())
-                    @foreach($grouped as $branch)
+                    
+
+                    @foreach($grouped->sort() as $branch)
 
                     <thead>
                         <tr>
@@ -33,45 +35,80 @@
                                     <span class="text-md">{{ $branch[0]->branch_name }}</span>
                                     <br>
                                     <span>
-                                        {{ Helper::getSingleProvince($branch[0]->branch_location) }}
+                                        {{ Helper::getSingleProvince($branch[0]->branch_province) }}
                                     </span>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th><span>Product</span></th>
-                            <th></th>
-                            <th><span>Price</span></th>
-                            <th><span>quantity</span></th>
+                            <th class="text-center"><span>Price</span></th>
+                            <th class="text-center"><span class="mr-3">quantity</span></th>
                             <th>Subtotal</th>
                         </tr>
                     </thead>
+
                     @foreach($branch as $cart)
                     <tr>
-                        <td class="product-thumbnail">
-                            <figure>
-                                <a href="{{ route('product', ['slug' => $cart->product_slug]) }}">
-                                    <img src="{{ Helper::files('product/'.$cart->product_image) }}" width="100"
-                                        height="100" alt="product">
-                                </a>
-                                <a wire:click="actionDelete('{{ $cart->id }}')" class="product-remove"
-                                    title="Remove this product">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </figure>
-                        </td>
                         <td class="product-name">
-                            <div class="product-name-section">
-                                <a href="{{ route('product', ['slug' => $cart->product_slug]) }}"> {{ $cart->name }}</a>
+                            <div class="row">
+                                <div class="col-md-4 product-thumbnail">
+                                    <figure>
+                                        <a href="{{ route('product', ['slug' => $cart->product_slug]) }}">
+                                            <img class="image-fluid"
+                                                src="{{ Helper::files('product/'.$cart->product_image) }}" width="100"
+                                                height="100" alt="product">
+                                        </a>
+                                        <a wire:click="actionDelete('{{ $cart->id }}')" class="product-remove"
+                                            title="Remove this product">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </figure>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="product-name-section">
+                                        <a href="{{ route('product', ['slug' => $cart->product_slug]) }}">
+                                            {{ $cart->name }}</a>
+                                    </div>
+                                    <div class="text-xs mb-2">
+                                        @if(!empty($cart->color_name))
+                                        <li class="">
+                                            {{ $cart->color_name }}
+                                        </li>
+                                        @endif
+                                        @if(!empty($cart->size_name))
+                                        <li class="">
+                                            {{ $cart->size_name }}
+                                        </li>
+                                        @endif
+                                        @if(!empty($cart->variant_name))
+                                        <li class="">
+                                            {{ $cart->variant_name }}
+                                        </li>
+                                        @endif
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 area">
+                                            <textarea data="{{ $cart->id }}" class="form-control" placeholder="catatan"
+                                                rows="2">{{ $cart->notes }}</textarea>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs">
+                                        weight : {{ $cart->product_weight }}gr
+                                    </span>
+
+                                </div>
                             </div>
                         </td>
-                        <td class="product-subtotal">
-                            <span class="amount">{{ Helper::createRupiah($cart->price) }}</span>
+                        <td class="product-subtotal text-center">
+                            <span class="amount ml-3">{{ Helper::createRupiah($cart->price) }}</span>
                         </td>
-                        <td class="product-quantity">
+                        <td class="product-quantity text-center">
                             <div class="input-group">
                                 <button wire:click="actionMinus('{{ $cart->id }}')" class="d-icon-minus"></button>
-                                <input class="form-control" value="{{ $cart->quantity }}" type="number">
+                                <input class="form-control" wire:change="setQty('{{ $cart->id }}', $event.target.value)"
+                                    value="{{ $cart->quantity }}" type="number">
                                 <button wire:click="actionPlus('{{ $cart->id }}')" class="d-icon-plus"></button>
                             </div>
                         </td>
@@ -80,51 +117,134 @@
                         </td>
                     </tr>
                     @endforeach
+
                     @endforeach
-                    @endif
+
                 </tbody>
 
-                <tfoot>
-                    <tr>
-                        <td colspan="4">Sub Total</td>
-                        <td class="text-right product-price">
-                            {{ number_format(Cart::getSubTotal()) }}
-                        </td>
-                    </tr>
-                    @if($coupon = Cart::getConditions()->first())
-                    <tr>
-                        <td class="total-col" colspan="4">
-                            Redem Discount :
-                            {{ $coupon ? $coupon->getName() : 'No Voucher' }}
-                        </td>
-                        <td class="text-right product-price">
-                            {{ $coupon ? number_format($coupon->getValue()) : 0 }}
-                        </td>
-                    </tr>
-                    @endif
-                    <tr>
-                        <td colspan="4">Grand Total</td>
-                        <td class="text-right product-price">{{ number_format(Cart::getTotal()) }}</td>
-                    </tr>
-                </tfoot>
             </table>
+        </div>
+        <aside class="col-lg-4 sticky-sidebar-wrapper">
+            <div class="sticky-sidebar" data-sticky-options="{'bottom': 20}">
+                <div class="summary mb-4">
+                    <div class="shipping-address pb-4">
+                        <h4 class="summary-subtitle">Informasi Pengiriman</h4>
+                        <input wire:model="name" type="text" class="form-control" placeholder="Nama" />
+                        <textarea wire:model="address" class="form-control mb-2" rows="4"
+                            placeholder="Alamat"></textarea>
+                        <input wire:model="phone" type="text" class="form-control" placeholder="Handphone (628)" />
+                        <input wire:model="email" type="text" class="form-control" placeholder="Email" />
+                        <hr>
+                        <div class="select-box">
+                            <select wire:model="province" class="form-control">
+                                <option value="">Select Province</option>
+                                @foreach($data_province as $pro)
+                                <option value="{{ $pro->rajaongkir_province_id }}">{{ $pro->rajaongkir_province_name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="select-box">
+                            <select wire:model="city" class="form-control">
+                                <option value="">Select City</option>
+                                @if(!empty($data_city))
+                                @foreach($data_city as $cit)
+                                <option value="{{ $cit->rajaongkir_city_id }}">{{ $cit->rajaongkir_city_type }}
+                                    {{ $cit->rajaongkir_city_name }}</option>
+                                @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="select-box">
+                            <select wire:model="area" class="form-control">
+                                <option value="">Select Area</option>
+                                @if(!empty($data_area))
+                                @foreach($data_area as $are)
+                                <option value="{{ $are->rajaongkir_area_id }}">{{ $are->rajaongkir_area_name }}</option>
+                                @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
 
-            <hr>
+                    <table class="shipping">
+                        <tr class="summary-subtotal">
+                            <td>
+                                <h4 class="summary-subtitle">Sub Total</h4>
+                            </td>
+                            <td>
+                                <p class="summary-subtotal-price">{{ number_format(Cart::getSubTotal()) }}</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="shipping">
+                        <tr class="">
+                            <td>
+                                <input type="text" wire:model="coupon" class="input-text form-control"
+                                    placeholder="Coupon code">
+                            </td>
+                            <td>
+                                @if($coupon = Cart::getConditions()->first())
+                                <button wire:click="removeCoupon" class="btn btn-dark">Remove</button>
+                                @else
+                                <button wire:click="updateCoupon" class="btn btn-dark">Apply</button>
+                                @endif
+                            </td>
+                        </tr>
+                    </table>
 
-            <div class="cart-actions mb-6 pt-6" style="float: right;">
-                <div class="coupon">
-                    <input type="text" wire:model="coupon" class="input-text form-control" placeholder="Coupon code">
-                    @if($coupon)
-                    <button wire:click="removeCoupon" class="btn btn-dark">Remove</button>
-                    @else
-                    <button wire:click="updateCoupon" class="btn btn-dark">Apply</button>
+                    <hr>
+
+                    @if($coupon = Cart::getConditions()->first())
+                    <table class="shipping">
+                        <tr class="summary-subtotal">
+                            <td>
+                                <h4 class="summary-subtitle">{{ $coupon ? $coupon->getName() : 'No Voucher' }}</h4>
+                            </td>
+                            <td>
+                                <p class="summary-subtotal-price">{{ $coupon ? number_format($coupon->getValue()) : 0 }}
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
                     @endif
 
-                    <a class="btn btn-dark" href="{{ route('checkout') }}">Checkout</a>
+                    <table class="shipping" style="clear: both;">
+                        <tr class="summary-subtotal">
+                            <td>
+                                <h4 class="summary-subtitle">Total</h4>
+                            </td>
+                            <td>
+                                <p class="summary-total-price">{{ Helper::createRupiah(Cart::getTotal())}}</p>
+                            </td>
+                        </tr>
+                    </table>
 
+                    <a href="{{ route('checkout') }}" wire:click="actionCheckout"
+                        class="btn btn-dark btn-checkout mb-5">Proceed to checkout</a>
                 </div>
             </div>
+        </aside>
+        @else
+        <div class="col-md-12 col-lg-12">
+            Belum ada Product
         </div>
-
+        @endif
     </div>
 </div>
+
+@push('javascript')
+<script>
+document.addEventListener('livewire:load', function() {
+
+    $(".area").on("change", function(e) {
+        var notes = $(this).val();
+        var product = $(this).attr('data');
+
+        @this.live_product = product;
+        @this.live_notes = notes;
+
+    });
+})
+</script>
+@endpush

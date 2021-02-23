@@ -14,6 +14,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use ChrisKonnertz\StringCalc\StringCalc;
 use Modules\Rajaongkir\Dao\Facades\AreaFacades;
+use Modules\Rajaongkir\Dao\Models\City;
 use Modules\Rajaongkir\Dao\Models\Province;
 use Thedevsaddam\LaravelSchema\Schema\Schema as Table;
 use Modules\Rajaongkir\Dao\Repositories\AreaRepository;
@@ -841,6 +842,14 @@ class Helper
             return $data;
         }
         return $data->rajaongkir_province_name ?? '';
+    }
+
+    public static function getSinglecity($id, $raw = false){
+        $data = City::find($id);
+        if($raw){
+            return $data;
+        }
+        return $data->rajaongkir_city_name ?? '';
     }
 
     public static function getSingleArea($id, $single = false, $raw = false)

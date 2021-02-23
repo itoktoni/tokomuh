@@ -4,10 +4,8 @@ namespace Modules\Item\Dao\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 use Modules\Item\Dao\Facades\BrandFacades;
 use Modules\Item\Dao\Facades\CategoryFacades;
-use Modules\Item\Dao\Facades\SubCategoryFacades;
 use Plugin\Helper;
 
 class Product extends Model
@@ -76,7 +74,7 @@ class Product extends Model
         'item_product_price' => 'required',
     ];
 
-    public $with = ['category', 'brand'];
+    public $with = ['category', 'brand', 'detail'];
 
     const CREATED_AT = 'item_product_created_at';
     const UPDATED_AT = 'item_product_updated_at';
@@ -99,7 +97,7 @@ class Product extends Model
         'item_product_price' => [true => 'Price'],
         'item_product_weight' => [false => 'Gram'],
         'item_product_stock' => [false => 'Stock'],
-        'item_product_image' => [true => 'Images'],
+        'item_product_image' => [false => 'Images'],
         'item_product_slug' => [false => 'Slug'],
         'item_product_display' => [false => 'Display'],
         'item_product_item_tag_json' => [false => 'Tag'],
@@ -146,7 +144,7 @@ class Product extends Model
         parent::boot();
         $statis = 'data';
         parent::creating(function ($model) {
-            $model->item_product_id = Helper::autoNumber($model->getTable(), 'item_product_id', 'P' . date('ymd'), 10);
+            $model->item_product_id = Helper::autoNumber($model->getTable(), 'item_product_id', 'P' . date('ymd'), 15);
             // $model->item_product_code = Helper::autoNumber($model->getTable(), 'item_product_id', date('m'), 4);
             
             // if($model->item_product_is_variant == 0){
@@ -169,42 +167,35 @@ class Product extends Model
             // }
         });
 
-        parent::saving(function ($model) {
+        // parent::saving(function ($model) {
 
-            // $file = 'item_product_file';
-            // if (request()->has($file)) {
-            //     $image = $model->item_product_image;
-            //     if ($image) {
-            //         Helper::removeImage($image, Helper::getTemplate(__CLASS__));
-            //     }
+        //     $file = 'item_product_file';
+        //     if (request()->has($file)) {
+        //         $image = $model->item_product_image;
+        //         if ($image) {
+        //             Helper::removeImage($image, Helper::getTemplate(__CLASS__));
+        //         }
 
-            //     $file = request()->file($file);
-            //     $name = Helper::uploadImage($file, Helper::getTemplate(__CLASS__), 400, 550);
-            //     $model->item_product_image = $name;
-            // }
+        //         $file = request()->file($file);
+        //         $name = Helper::uploadImage($file, Helper::getTemplate(__CLASS__), 400, 550);
+        //         $model->item_product_image = $name;
+        //     }
 
-            // if ($model->item_product_min_order <= 0) {
-            //     $model->item_product_min_order = 1;
-            // }
+        //     if ($model->item_product_min_order <= 0) {
+        //         $model->item_product_min_order = 1;
+        //     }
 
-            // if (request()->has('item_product_item_tag_json')) {
-            //     $model->item_product_item_tag_json = json_encode(request()->get('item_product_item_tag_json'));
-            // }
+        //     if (request()->has('item_product_item_tag_json')) {
+        //         $model->item_product_item_tag_json = json_encode(request()->get('item_product_item_tag_json'));
+        //     }
 
-            // if ($model->item_product_name && empty($model->item_product_slug)) {
-            //     $model->item_product_slug = Str::slug($model->item_product_name);
-            // } else {
-            //     $model->item_product_slug = Str::slug($model->item_product_slug);
-            // }
+        //     if ($model->item_product_name && empty($model->item_product_slug)) {
+        //         $model->item_product_slug = Str::slug($model->item_product_name);
+        //     } else {
+        //         $model->item_product_slug = Str::slug($model->item_product_slug);
+        //     }
 
-            // if ($model->item_product_item_sub_category_id && !empty($model->item_product_item_sub_category_id)) {
-            //     $sub = SubCategoryFacades::find($model->item_product_item_category_id);
-            //     $model->item_product_item_category_id = $sub ? $sub->item_sub_category_item_category_id : null;
-            // }
-
-            // $model->item_product_branch_id = auth()->user()->branch;
-
-        });
+        // });
 
         // parent::deleting(function ($model) {
         //     if (request()->has('id')) {

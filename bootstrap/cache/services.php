@@ -65,6 +65,7 @@
     61 => 'Webklex\\IMAP\\Providers\\LaravelServiceProvider',
     62 => 'CarlosOCarvalho\\Providers\\CloudinaryServiceProvider',
     63 => 'Artesaos\\SEOTools\\Providers\\SEOToolsServiceProvider',
+    64 => 'Ixudra\\Curl\\CurlServiceProvider',
   ),
   'eager' => 
   array (
@@ -114,6 +115,7 @@
     43 => 'Darryldecode\\Cart\\CartServiceProvider',
     44 => 'Webklex\\IMAP\\Providers\\LaravelServiceProvider',
     45 => 'CarlosOCarvalho\\Providers\\CloudinaryServiceProvider',
+    46 => 'Ixudra\\Curl\\CurlServiceProvider',
   ),
   'deferred' => 
   array (

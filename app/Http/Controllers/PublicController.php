@@ -156,25 +156,6 @@ class PublicController extends Controller
 
     public function shop($type = null, $slug = null)
     {
-        $object_product = new ProductRepository();
-        $product = $object_product->dataRepository();
-
-        if (request()->has('type')) {
-            if (request()->get('type') == 'category') {
-                $data = Helper::shareOption(new CategoryRepository(), false, true);
-                return View(Helper::setViewFrontend(__FUNCTION__ . '_category'))->with($this->share([
-                    'product' => $data,
-                ]));
-            } else {
-                $data = $product->where('item_category_slug', request()->get('type'))->get();
-                return View(Helper::setViewFrontend(__FUNCTION__))->with($this->share([
-                    'product' => $data,
-                ]));
-            }
-        }
-
-        $data = $product->get();
-
         SEOTools::setTitle('Belanja murah di '.config('website.name'));
         SEOTools::setDescription(config('website.seo'));
         SEOTools::opengraph()->setUrl(route('shop'));
@@ -194,7 +175,6 @@ class PublicController extends Controller
         }
 
         return View(Helper::setViewFrontend(__FUNCTION__))->with($this->share([
-            'product' => $data,
         ]));
     }
 

@@ -45,7 +45,7 @@ class Company extends Model
         'company_contact_email' => 'required|email',
         'company_contact_person' => 'required',
         'company_contact_address' => 'required',
-        'company_contact_rajaongkir_area_id' => 'required',
+        // 'company_contact_rajaongkir_area_id' => 'required',
     ];
 
     public $searching = 'company_contact_name';
@@ -87,34 +87,34 @@ class Company extends Model
         return $this->hasOne(Area::class, 'rajaongkir_area_id', 'company_invoice_rajaongkir_area_id');
     }
 
-    public static function boot()
-    {
-        parent::saving(function ($model) {
-            $file_name = 'logo_contact';
-            if (request()->has($file_name)) {
-                $image = $model->company_logo;
-                if (file_exists(public_path().'files/company/'.$image)) {
-                    Helper::removeImage($image, Helper::getTemplate(__CLASS__));
-                }
+    // public static function boot()
+    // {
+    //     // parent::saving(function ($model) {
+    //     //     $file_name = 'logo_contact';
+    //     //     if (request()->has($file_name)) {
+    //     //         $image = $model->company_logo;
+    //     //         if (file_exists(public_path().'files/company/'.$image)) {
+    //     //             Helper::removeImage($image, Helper::getTemplate(__CLASS__));
+    //     //         }
                 
-                $file = request()->file($file_name);
-                $name = Helper::uploadImage($file, Helper::getTemplate(__CLASS__));
-                $model->company_logo = $name;
-            }
+    //     //         $file = request()->file($file_name);
+    //     //         $name = Helper::uploadImage($file, Helper::getTemplate(__CLASS__));
+    //     //         $model->company_logo = $name;
+    //     //     }
 
-            $sign_name = 'sign_contact';
-            if (request()->has($sign_name)) {
-                $image_sign = $model->company_contact_sign;
-                if (file_exists(public_path().'files/company/'.$image_sign)) {
-                    Helper::removeImage($image_sign, Helper::getTemplate(__CLASS__));
-                }
+    //     //     $sign_name = 'sign_contact';
+    //     //     if (request()->has($sign_name)) {
+    //     //         $image_sign = $model->company_contact_sign;
+    //     //         if (file_exists(public_path().'files/company/'.$image_sign)) {
+    //     //             Helper::removeImage($image_sign, Helper::getTemplate(__CLASS__));
+    //     //         }
                 
-                $sign = request()->file($sign_name);
-                $name2 = Helper::uploadImage($sign, Helper::getTemplate(__CLASS__));
-                $model->company_contact_sign = $name2;
-            }
-        });
+    //     //         $sign = request()->file($sign_name);
+    //     //         $name2 = Helper::uploadImage($sign, Helper::getTemplate(__CLASS__));
+    //     //         $model->company_contact_sign = $name2;
+    //     //     }
+    //     // });
 
-        parent::boot();
-    }
+    //     parent::boot();
+    // }
 }

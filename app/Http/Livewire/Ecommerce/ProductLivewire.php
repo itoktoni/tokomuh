@@ -13,6 +13,8 @@ class ProductLivewire extends Component
 {
     public $data;
     public $love = false;
+    public $live_notes;
+    public $live_product;
 
     public $unic_id;
     public $color_id;
@@ -35,9 +37,13 @@ class ProductLivewire extends Component
 
     public $branch_address;
     public $branch_location;
+    public $branch_province;
+    public $branch_city;
+    public $branch_area;
 
     public $product_slug;
     public $product_image;
+    public $product_weight;
 
     public $price;
     public $mask_price;
@@ -48,11 +54,11 @@ class ProductLivewire extends Component
     public $data_size;
     public $data_branch;
 
+    public $notes;
     public $option = 'Please Select Option';
 
     public function mount($slug)
     {
-        $this->reboot();
         $this->data = ProductFacades::slugRepository($slug);
         $this->product_id = $this->data->item_product_id;
         $this->product_name = $this->data->item_product_name;
@@ -85,77 +91,53 @@ class ProductLivewire extends Component
 
     public function render()
     {
-        // Cart::clear();
-        
-        if(!empty($this->branch_id)){
-            session()->put('branch_id', $this->branch_id);
-        }
-        if(!empty($this->color_id)){
-            session()->put('branch_id', $this->branch_id);
-        }
-        if(!empty($this->size_id)){
-            session()->put('branch_id', $this->branch_id);
-        }
-        if(!empty($this->variant_id)){
-             session()->put('branch_id', $this->branch_id);
-        }
-        
         $this->updatePrice();
-
         return View(Helper::setViewLivewire(__CLASS__));
     }
 
-    public function updatePrice(){
-        $query = ProductDetail::where('item_detail_product_id', $this->product_id);
-        if(session()->has('branch_id')){
-            $query->where('item_detail_branch_id', $this->branch_id);
-        }
-        if(session()->has('color_id')){
-            $query->where('item_detail_color_id', $this->color_id);
-        }
-        if(session()->has('size_id')){
-            $query->where('item_detail_size_id', $this->size_id);
-        }
-        if(session()->has('variant_id')){
-            $query->where('item_detail_variant_id', $this->variant_id);
-        }
-
-        $item = $query->first();
-
-        if($this->data->item_product_is_variant){
-            $this->price = $item->item_detail_price ?? 0;
-            $this->mask_price = isset($item->item_detail_price) ? Helper::createRupiah($item->item_detail_price) : $this->option;
-            $this->unic_id = $item->item_detail_id ?? null;
-        }
-        else{
+    public function updatePrice()
+    {
+        $detail = $this->data->detail;
+        if ($detail->count() == 0) {
+            
             $this->price = $this->data->item_product_price ?? 0;
             $this->mask_price = $this->data->item_product_price ? Helper::createRupiah($this->data->item_product_price) : $this->option;
             $this->unic_id = $this->data->item_product_id ?? null;
-        }
 
-        $this->color_name = $item->item_detail_color_name ?? null;
-        $this->size_name = $item->item_detail_size_name ?? null;
-        $this->variant_name = $item->item_detail_variant_name ?? null;
-        $this->branch_name = $item->item_detail_branch_name ?? null;
-        
-        $this->branch_address = $item->item_detail_branch_address ?? null;
-        $this->branch_location = $item->item_detail_branch_location ?? null;
+        } else {
+            
+            $query = ProductDetail::where('item_detail_product_id', $this->product_id);
+            $query->where('item_detail_branch_id', $this->branch_id);
+            $query->where('item_detail_color_id', $this->color_id);
+            $query->where('item_detail_size_id', $this->size_id);
+            $query->where('item_detail_variant_id', $this->variant_id);
+
+            $item = $query->first();
+
+            $this->price = $item->item_detail_price ?? 0;
+            $this->mask_price = isset($item->item_detail_price) ? Helper::createRupiah($item->item_detail_price) : $this->option;
+            $this->unic_id = $item->item_detail_id ?? null;
+
+            $this->color_name = $item->item_detail_color_name ?? null;
+            $this->size_name = $item->item_detail_size_name ?? null;
+            $this->variant_name = $item->item_detail_variant_name ?? null;
+            $this->branch_name = $item->item_detail_branch_name ?? null;
+
+            $this->branch_address = $item->item_detail_branch_address ?? null;
+            $this->branch_location = $item->item_detail_branch_location ?? null;
+            $this->branch_province = $item->item_detail_branch_province_id ?? null;
+            $this->branch_city = $item->item_detail_branch_city_id ?? null;
+            $this->branch_area = $item->item_detail_branch_area_id ?? null;
+        }
 
         $this->product_name = $this->data->item_product_name ?? null;
         $this->product_image = $this->data->item_product_image ?? null;
         $this->product_slug = $this->data->item_product_slug ?? null;
+        $this->product_weight = $this->data->item_product_weight ?? null;
 
         if ($this->qty <= 1) {
             $this->qty = 1;
         }
-    }
-
-    public function reboot(){
-        session()->forget('color_id');
-        session()->forget('branch_id');
-        session()->forget('size_id');
-        session()->forget('variant_id');
-        session()->forget('province_id');
     }
 
     public function checkWishlist($product_id)
@@ -191,7 +173,8 @@ class ProductLivewire extends Component
         $this->data = ProductFacades::showRepository($product_id);
     }
 
-    public function updateQty($id, $sign, $qty =1){
+    public function updateQty($id, $sign, $qty = 1)
+    {
         if (Cart::getContent()->contains('id', $id)) {
             $formula = $sign ? array('quantity' => +$qty) : array('quantity' => -$qty);
             Cart::update($id, $formula);
@@ -261,11 +244,15 @@ class ProductLivewire extends Component
             'branch_id' => $this->branch_id,
             'branch_name' => $this->branch_name,
             'branch_address' => $this->branch_address,
-            'branch_location' => $this->branch_location,
+            'branch_province' => $this->branch_province,
+            'branch_city' => $this->branch_city,
+            'branch_area' => $this->branch_area,
             'product_id' => $this->product_id,
             'product_name' => $this->product_name,
             'product_image' => $this->product_image,
             'product_slug' => $this->product_slug,
+            'product_weight' => $this->product_weight,
+            'notes' => $this->notes,
         ];
 
         if (Cart::getContent()->contains('id', $this->unic_id)) {
