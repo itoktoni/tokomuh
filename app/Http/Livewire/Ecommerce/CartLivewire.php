@@ -50,17 +50,7 @@ class CartLivewire extends Component
 
     public function render()
     {
-        if (auth()->check()) {
-
-            $user = auth()->user();
-            $this->name = $user->name;
-            $this->address = $user->address;
-            $this->phone = $user->phone;
-            $this->email = $user->email;
-            $this->province = $user->province;
-            $this->city = $user->city;
-            $this->area = $user->area;
-        }
+  
 
         if (isset($this->name)) {
             session()->put('name', $this->name);
