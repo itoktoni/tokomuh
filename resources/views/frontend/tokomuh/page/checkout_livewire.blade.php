@@ -140,7 +140,7 @@
                         <section class="summary-information">
                             <h2 class="title title-simple text-left">{{ session('name') ?? '' }}</h2>
                             @if(session()->has('address'))
-                            <p class="text-grey">{{ session('address')</p>
+                            <p class="text-grey">{{ session('address') }}</p>
                             @endif
                             @if(session()->has('area'))
                             <p class="text-grey">
