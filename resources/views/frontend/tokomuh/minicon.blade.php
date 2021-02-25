@@ -38,10 +38,6 @@
     @endguest
 
     <div class="dropdown cart-dropdown dir-up">
-        <a href="#" class="sticky-link cart-toggle">
-            <i class="d-icon-bag"></i>
-            <span>Cart</span>
-        </a>
         <!-- End of Cart Toggle -->
        @livewire('ecommerce.minicart-livewire')
         <!-- End of Dropdown Box -->

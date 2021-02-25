@@ -446,6 +446,17 @@ section .owl-theme .owl-nav.disabled+.owl-dots {
     color: #fff !important;
 }
 
+.icon-footer{
+    font-size: 1rem !important;
+    color:#666 !important;
+}
+
+.icon-footer-count{
+    margin-top: 5px;
+    display: unset !important;
+    line-height: 22px !important;
+}
+
 /* Responsive */
 @include mq(1366px, max) {
     .intro-slider figure {
