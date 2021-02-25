@@ -24,8 +24,6 @@
 
                     @endphp
 
-                    
-
                     @foreach($grouped->sort() as $branch)
 
                     <thead>

@@ -26,32 +26,6 @@
 
                 <hr>
 
-                <div class="col-md-12 text-center">
-                    @if(session()->has('success'))
-                    <div style="margin-top:-20px;" class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Konfirmasi Pemesanan Telah Success, Harap menunggu !</strong>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        @if ($errors)
-                        @foreach ($errors->all() as $error)
-                        <div class="alert alert-sm alert-danger alert-dismissible fade show" role="alert">
-                            <strong>{{ $error }}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                        </div>
-                        @endforeach
-                        @endif
-                    </div>
-                </div>
-
                 <div id="billing" class="">
                     {!!Form::open(['route' => 'confirmation', 'class' => 'checkout-form', 'files' => true]) !!}
 

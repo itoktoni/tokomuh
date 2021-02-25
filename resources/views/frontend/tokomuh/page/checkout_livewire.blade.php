@@ -1,10 +1,49 @@
 <div class="container">
     <div class="form">
         <div class="row gutter-lg">
+            @if($completed)
+            <div class="container" style="margin-top: -100px;">
+
+                <div class="main order">
+                    <div class="page-content">
+
+                        <div class="order-message mb-5">
+                            <i class="fas fa-check"></i>Thank you, Your order has been received.
+                        </div>
+
+                        <div class="order-results ">
+                            <div class="overview-item">
+                                <span>Order number</span>
+                                <strong>{{ $order_id }}</strong>
+                            </div>
+                            <div class="overview-item">
+                                <span>Status</span>
+                                <strong>Processing</strong>
+                            </div>
+                            <div class="overview-item">
+                                <span>Date</span>
+                                <strong>{{ date('d M Y') }}</strong>
+                            </div>
+                            <div class="overview-item">
+                                <span>Ongkir</span>
+                                <strong>{{ Helper::createRupiah($order_ongkir) }}</strong>
+                            </div>
+                            <div class="overview-item">
+                                <span>Total</span>
+                                <strong>{{ Helper::createRupiah($order_total) }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            @else
+            @if(session()->get('checkout')->count() > 0)
+
             <h3 class="title title-default text-left">Checkout Detail</h3>
             <div class="col-lg-7 mb-6">
                 <div class="sticky-sidebar">
-                    @if(session()->has('checkout'))
+
                     @foreach(session('checkout') as $cart)
                     <div
                         class="summary mb-6 {{ $errors->has('checkout.'.$cart->branch_id.'.branch_ongkir') ? 'error' : '' }}">
@@ -121,7 +160,6 @@
                     </div>
 
                     @endforeach
-                    @endif
                 </div>
             </div>
             <aside class="col-lg-5 sticky-sidebar-wrapper">
@@ -248,6 +286,12 @@
                 @endif
 
             </aside>
+            @else
+            <div class="order-message text-md">
+                <i class="fas fa-check"></i> Please Buy some product !.
+            </div>
+            @endif
+            @endif
         </div>
     </div>
 </div>

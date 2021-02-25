@@ -18,6 +18,7 @@ class OrderDetail extends Model
     protected $with = ['product', 'variant'];
     protected $fillable = [
         'sales_order_detail_id',
+        'sales_order_detail_group_id',
         'sales_order_detail_order_id',
         'sales_order_detail_notes',
         'sales_order_detail_item_product_id',
@@ -33,6 +34,12 @@ class OrderDetail extends Model
         'sales_order_detail_tax_id',
         'sales_order_detail_tax_percent',
         'sales_order_detail_tax_value',
+        'sales_order_detail_color_id',
+        'sales_order_detail_color_name',
+        'sales_order_detail_size_id',
+        'sales_order_detail_size_name',
+        'sales_order_detail_variant_id',
+        'sales_order_detail_variant_name',
     ];
 
     public $timestamps = false;

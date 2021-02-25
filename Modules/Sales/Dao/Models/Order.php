@@ -31,11 +31,8 @@ class Order extends Model
         'sales_order_updated_by',
         'sales_order_deleted_at',
         'sales_order_deleted_by',
-        'sales_order_code_po',
-        'sales_order_code_quotation',
-        'sales_order_code_reference',
         'sales_order_date_order',
-        'sales_order_date_quotation',
+        'sales_order_date_order_wa',
         'sales_order_from_id',
         'sales_order_from_name',
         'sales_order_from_phone',
@@ -49,46 +46,37 @@ class Order extends Model
         'sales_order_to_address',
         'sales_order_to_area',
         'sales_order_status',
-        'sales_order_term_top',
-        'sales_order_term_product',
-        'sales_order_term_valid',
-        'sales_order_notes_internal',
-        'sales_order_notes_external',
+        'sales_order_notes_user',
+        'sales_order_notes_admin',
         'sales_order_discount_code',
         'sales_order_discount_name',
-        'sales_order_discount_percent',
         'sales_order_discount_value',
-        'sales_order_tax_id',
-        'sales_order_tax_percent',
-        'sales_order_tax_value',
         'sales_order_sum_product',
         'sales_order_sum_discount',
-        'sales_order_sum_product',
-        'sales_order_sum_tax',
         'sales_order_sum_ongkir',
+        'sales_order_sum_weight',
         'sales_order_sum_total',
-        'sales_order_payment_phone',
-        'sales_order_payment_email',
-        'sales_order_payment_value',
         'sales_order_payment_date',
         'sales_order_payment_bank_from',
         'sales_order_payment_bank_to_id',
         'sales_order_payment_person',
+        'sales_order_payment_phone',
+        'sales_order_payment_email',
         'sales_order_payment_file',
+        'sales_order_payment_value',
         'sales_order_payment_notes',
-        'sales_order_delivery_type',
-        'sales_order_delivery_name',
-        'sales_order_token',
-        'sales_order_print_counter'
+        'sales_order_core_user_id',
+        'sales_order_courier_code',
+        'sales_order_courier_service',
     ];
 
     public $timestamps = true;
     public $incrementing = false;
     public $rules = [
-        'sales_order_email' => 'required',
+        'sales_order_to_phone' => 'required',
     ];
 
-    public $with = ['detail', 'detail.product'];
+    // public $with = ['detail', 'detail.product'];
 
     const CREATED_AT = 'sales_order_created_at';
     const UPDATED_AT = 'sales_order_updated_at';
@@ -122,24 +110,6 @@ class Order extends Model
         '3' => ['PREPARE', 'success'],
         '4' => ['DELIVERED', 'dark'],
         '0' => ['CANCEL', 'danger'],
-    ];
-
-    public $courier = [
-        '' => 'Choose Expedition',
-        'pos' => 'POS Indonesia (POS)',
-        'jne' => 'Jalur Nugraha Ekakurir (JNE)',
-        'tiki' => 'Citra Van Titipan Kilat (TIKI)',
-        'rpx' => 'RPX Holding (RPX)',
-        'wahana' => 'Wahana Prestasi Logistik (WAHANA)',
-        'sicepat' => 'SiCepat Express (SICEPAT)',
-        'jnt' => 'J&T Express (J&T)',
-        'sap' => 'SAP Express (SAP)',
-        'jet' => 'JET Express (JET)',
-        'indah' => 'Indah Logistic (INDAH)',
-        'ninja' => 'Ninja Express (NINJA)',
-        'first' => 'First Logistics (FIRST)',
-        'lion' => 'Lion Parcel (LION)',
-        'rex' => 'Royal Express Indonesia (REX)',
     ];
 
     public function detail()
@@ -211,20 +181,20 @@ class Order extends Model
     {
         parent::boot();
         parent::creating(function ($model) {
-            $model->sales_order_created_by = auth()->user()->username ?? '';
-            $model->sales_order_token = Str::uuid();
+            // $model->sales_order_created_by = auth()->user()->username ?? '';
+            // $model->sales_order_token = Str::uuid();
         });
 
         parent::saving(function ($model) {
-            if(request()->has('sales_order_date_order')){
-                $model->sales_order_date_order = $model->sales_order_date_order->format('Y-m-d H:i:s');
-            }
-            if(request()->has('sales_order_payment_date') && !empty(request()->get('sales_order_payment_date'))){
-                $model->sales_order_payment_date = $model->sales_order_payment_date->format('Y-m-d H:i:s');
-            }
-            else{
-                $model->sales_order_payment_date = null;
-            }
+            // if(request()->has('sales_order_date_order')){
+            //     $model->sales_order_date_order = $model->sales_order_date_order->format('Y-m-d H:i:s');
+            // }
+            // if(request()->has('sales_order_payment_date') && !empty(request()->get('sales_order_payment_date'))){
+            //     $model->sales_order_payment_date = $model->sales_order_payment_date->format('Y-m-d H:i:s');
+            // }
+            // else{
+            //     $model->sales_order_payment_date = null;
+            // }
         });
     }
 }

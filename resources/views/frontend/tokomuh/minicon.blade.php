@@ -4,10 +4,19 @@
         <span>Home</span>
     </a>
 
-    <a href="{{ route('wishlist') }}" class="sticky-link">
+    @auth
+    <a href="{{ route('wishlist') }}" class="sticky-link auth">
         <i class="d-icon-heart"></i>
         <span>Wishlist</span>
     </a>
+    @endauth
+
+    @guest
+    <a href="{{ route('auth') }}" class="sticky-link auth">
+        <i class="d-icon-heart"></i>
+        <span>Wishlist</span>
+    </a>
+    @endguest
 
     <a href="{{ route('shop') }}" class="sticky-link">
         <i class="d-icon-card"></i>
@@ -22,7 +31,7 @@
     @endauth
 
     @guest
-    <a href="{{ route('login') }}" class="login sticky-link">
+    <a href="{{ route('auth') }}" class="auth sticky-link">
         <i class="d-icon-user"></i>
         <span>Login</span>
     </a>

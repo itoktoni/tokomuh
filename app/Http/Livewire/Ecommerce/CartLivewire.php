@@ -50,8 +50,6 @@ class CartLivewire extends Component
 
     public function render()
     {
-  
-
         if (isset($this->name)) {
             session()->put('name', $this->name);
         }
@@ -223,6 +221,7 @@ class CartLivewire extends Component
                     'order' => 1,
                     'attributes' => array( // attributes field is optional
                         'name' => $data->marketing_promo_name,
+                        'code' => $data->marketing_promo_code,
                         'discount' => $total,
                         'matrix' => $data->marketing_promo_matrix,
                     ),

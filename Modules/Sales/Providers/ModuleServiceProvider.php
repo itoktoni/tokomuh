@@ -32,8 +32,12 @@ class ModuleServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        
         $this->app->bind('order_facades', function () {
             return new \Modules\Sales\Dao\Repositories\OrderRepository();
+        });
+        $this->app->bind('order_group_facades', function () {
+            return new \Modules\Sales\Dao\Repositories\OrderGroupRepository();
         });
         $this->app->bind('subscribe_facades', function () {
             return new \Modules\Sales\Dao\Repositories\SubscribeRepository();

@@ -2,18 +2,15 @@
 
     <h1 class="product-name">{{ $data->item_product_name }}</h1>
     <div class="product-meta">
-        SKU : <span
-            class="product-sku">{{ !empty($data->item_product_sku) ? $data->item_product_sku : 'Default' }}</span>
-        BRAND :
-        <span class="product-brand">
-            {{ Str::upper($data->item_brand_name ?? $data->brand->item_brand_name) }}
-        </span>
+        WEIGHT : <span class="product-sku">{{ round($data->item_product_weight /1000,2) }}Kg</span>
+        BRAND : <span class="product-brand">{{ Str::upper($data->item_brand_name ?? $data->brand->item_brand_name) }}</span>
         CATEGORY :
         <a href="{{ route('category', ['slug' => $data->item_category_slug ?? $data->category->item_category_slug]) }}">
             <span class="product-brand">
                 {{ Str::upper($data->item_category_name ?? $data->category->item_category_name) }}
             </span>
         </a>
+
     </div>
     <div class="product-price">{{ $mask_price }}</div>
 
@@ -27,13 +24,6 @@
         </i> Wishlist
     </a>
     @endauth
-
-    <div class="product-form" style="width: 70%">
-        <label class="text-center">Weight:</label>
-        <span>
-            {{ $data->item_product_weight }}gr
-        </span>
-    </div>
 
     @if($data_branch)
     <div class="product-form">
@@ -95,6 +85,14 @@
     </div>
     @endif
 
+    <div class="product-form" style="width: 70%">
+        <label class="text-center">Chat:</label>
+        <a target="_blank" class="btn-product btn-wa"
+            href="https://api.whatsapp.com/send?phone={{ Helper::convertPhone(config('website.phone')) }}&text=Saya%20tertarik%20untuk%20membeli%20produk%20{{ str_replace(' ','%20', $data->item_product_name) }}%20segera.">
+            <i class="fab fa-lg fa-whatsapp mr-2"></i>Buy from WA
+        </a>
+    </div>
+
     <div class="product-form product-qty" style="width: 70%">
         <label class="text-center">Notes:</label>
         <textarea wire:model="notes" class="form-group" rows="3"></textarea>
@@ -103,7 +101,7 @@
     <hr class="product-divider mt-5">
 
     <div class="product-form product-qty">
-        <label>QTY:</label>
+
         <div class="product-form-group">
             <div class="input-group">
                 <button wire:click="actionMinus" class="d-icon-minus"></button>
@@ -114,6 +112,8 @@
                 <i class="d-icon-bag"></i>Add To Cart
             </button>
         </div>
+
+
     </div>
 
     @if($errors->any())

@@ -441,6 +441,11 @@ section .owl-theme .owl-nav.disabled+.owl-dots {
     padding-bottom: 0px;
 }
 
+.btn-wa{
+    background-color: #53AF50 !important;
+    color: #fff !important;
+}
+
 /* Responsive */
 @include mq(1366px, max) {
     .intro-slider figure {

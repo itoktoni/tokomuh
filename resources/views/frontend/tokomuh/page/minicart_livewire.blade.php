@@ -74,8 +74,15 @@
     </div>
     @endif
     <!-- End of Cart Total -->
+    @if(session()->has('area'))
     <div class="cart-action">
         <a href="{{ route('checkout') }}" class="btn btn-dark"><span>Checkout</span></a>
     </div>
+    @else
+    <div class="cart-action">
+        <a href="{{ route('cart') }}" class="btn btn-dark"><span>Complete Cart</span></a>
+    </div>
+    @endif
+
     <!-- End of Cart Action -->
 </div>
