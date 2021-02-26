@@ -82,10 +82,19 @@ class User extends Authenticatable implements MustVerifyEmail
     public $datatable = [
         'id'            => [false => 'ID User'],
         'username'      => [true => 'Username'],
+        'address'      => [true => 'Username'],
         'name'          => [true => 'Name'],
         'email'         => [false => 'Email'],
+        'phone'         => [false => 'Email'],
         'group_user'    => [true => 'Group User'],
         'active'        => [true => 'Active'],
+        'rajaongkir_area_province_id'        => [false => 'Active'],
+        'rajaongkir_area_province_name'        => [false => 'Active'],
+        'rajaongkir_area_city_id'        => [false => 'Active'],
+        'rajaongkir_area_city_name'        => [false => 'Active'],
+        'rajaongkir_area_id'        => [false => 'Active'],
+        'rajaongkir_area_name'        => [false => 'Active'],
+        'rajaongkir_area_type'        => [false => 'Active'],
     ];
 
     public function scopeById($query, $id)

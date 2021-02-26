@@ -617,9 +617,7 @@
                         NO. {{ str_replace("SO","INVG",$master->sales_order_id ?? '') }}
                     </span>
                 </h1>
-                <h2>
-                    Delivery Date : {{ $master->sales_order_date_order->format('d F Y') }}
-                </h2>
+                
                 <table>
                     <tr>
                         <td class="head">
@@ -631,10 +629,10 @@
                     </tr>
                     <tr>
                         <td class="head">
-                            Print Counter
+                            Order Date
                         </td>
                         <td>
-                            {{ $master->sales_order_print_counter ?? '' }}
+                        {{ $master->sales_order_date_order->format('d F Y') }}
                         </td>
                     </tr>
                 </table>
@@ -754,14 +752,7 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <td colspan="8">
-                        <span style="font-size: 10px;">
-                            Transfer ke :  {{ $banks->finance_bank_name ?? '' }} a.n {{ $banks->finance_bank_account_name ?? '' }} ( {{ $banks->finance_bank_account_number ?? '' }} )
-                        </span>
-                        
-                    </td>
-                </tr>
+               
             </table>
         </div>
 

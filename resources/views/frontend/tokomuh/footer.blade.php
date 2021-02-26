@@ -21,20 +21,6 @@
 
                         @livewire('ecommerce.subscribe-livewire')
 
-                        <!-- <form action="{{ route('subscribe') }}#subsribe" method="POST"
-                            class="input-wrapper input-wrapper-inline ml-lg-5">
-                            @csrf
-                            <input type="text" class="form-control" name="phone" id="newsletter-email1"
-                                placeholder="Masukan Nomer Handphone..." />
-                                @error('phone') <span class="has-error">{{ $message }}</span> @enderror
-                                @if(session()->has('success')) <span class="has-error">Phone has been saved!</span> @endif
-
-                            <button class="btn btn-primary btn-md ml-2" type="submit">Subsribe<i
-                                    class="d-icon-arrow-right"></i></button>
-
-
-                        </form> -->
-
                     </div>
                     <!-- End of Newsletter -->
                 </div>
@@ -62,11 +48,7 @@
                             <div class="widget">
                                 <ul class="widget-body">
                                     <li>
-                                        <label>Customer Service 1 :</label>
-                                        <a href="#">{{ config('website.phone') }}</a>
-                                    </li>
-                                    <li>
-                                        <label>Customer Service 2 :</label>
+                                        <label>Customer Service :</label>
                                         <a href="#">{{ config('website.phone') }}</a>
                                     </li>
                                 </ul>
@@ -75,10 +57,6 @@
                         <div class="col-md-6">
                             <div class="widget">
                                 <ul class="widget-body">
-                                    <li>
-                                        <label>Whatsup :</label>
-                                        <a href="#"><a href="#">{{ config('website.phone') }}</a></a>
-                                    </li>
                                     <li>
                                         <label>Email :</label>
                                         <a href="#">{{ config('website.email') }}</a>
@@ -94,10 +72,11 @@
                     <div class="widget ml-lg-4">
                         <h4 class="widget-title">Informasi Pembeli</h4>
                         <ul class="widget-body">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Order History</a></li>
-                            <li><a href="#">Returns</a></li>
-                            <li><a href="#">Custom Service</a></li>
+                            @foreach($gpage->where('marketing_page_status', 2)->all() as $pembeli)
+                            <li><a
+                                    href="{{ route('page', ['slug' => $pembeli->marketing_page_slug]) }}">{{ $pembeli->marketing_page_name }}</a>
+                            </li>
+                            @endforeach
                         </ul>
                     </div>
                     <!-- End of Widget -->
@@ -106,9 +85,11 @@
                     <div class="widget ml-lg-4">
                         <h4 class="widget-title">Informasi Penjual</h4>
                         <ul class="widget-body">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Order History</a></li>
-                            <li><a href="#">Returns</a></li>
+                            @foreach($gpage->where('marketing_page_status', 1)->all() as $penjual)
+                            <li><a
+                                    href="{{ route('page', ['slug' => $penjual->marketing_page_slug]) }}">{{ $penjual->marketing_page_name }}</a>
+                            </li>
+                            @endforeach
                         </ul>
                     </div>
                     <!-- End of Widget -->

@@ -8,6 +8,7 @@ use Modules\Finance\Dao\Models\Bank;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Finance\Dao\Models\Account;
 use Modules\Procurement\Dao\Repositories\PurchaseRepository;
+use Modules\Sales\Dao\Facades\OrderGroupFacades;
 use Modules\Sales\Dao\Models\Order;
 use Modules\Sales\Dao\Repositories\OrderRepository;
 
@@ -129,21 +130,16 @@ class Payment extends Model
 
         if ($model->finance_payment_sales_order_id) {
 
-          $order = new OrderRepository();
-          $getOrder = $order->showRepository($model->finance_payment_sales_order_id);
-          if ($getOrder && $getOrder->sales_order_status < 2) {
-            $order->updateRepository($model->finance_payment_sales_order_id, [
-              'sales_order_status' => 2
+          $getOrder = OrderGroupFacades::showRepository($model->finance_payment_sales_order_id);
+          if ($getOrder && $getOrder->sales_group_status < 3) {
+
+            $order = $getOrder->order()->update([
+              'sales_order_status' => 3
+            ]);
+            OrderGroupFacades::updateRepository($model->finance_payment_sales_order_id, [
+              'sales_group_status' => 3
             ]);
           }
-        }
-
-        if ($model->finance_payment_reference) {
-
-          $purchase = new PurchaseRepository();
-          $purchase->updateRepository($model->finance_payment_reference, [
-            'purchase_paid' => 1
-          ]);
         }
       }
     });

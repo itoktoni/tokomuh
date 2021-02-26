@@ -17,6 +17,7 @@ use Modules\Finance\Dao\Models\Payment;
 use Modules\Forwarder\Dao\Models\Vendor;
 use Modules\Sales\Dao\Models\OrderDetail;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Sales\Dao\Facades\OrderGroupFacades;
 
 class Order extends Model
 {
@@ -25,6 +26,7 @@ class Order extends Model
     protected $primaryKey = 'sales_order_id';
     protected $fillable = [
         'sales_order_id',
+        'sales_order_group_id',
         'sales_order_created_at',
         'sales_order_created_by',
         'sales_order_updated_at',
@@ -32,7 +34,10 @@ class Order extends Model
         'sales_order_deleted_at',
         'sales_order_deleted_by',
         'sales_order_date_order',
-        'sales_order_date_order_wa',
+        'sales_order_date_wa_completed_wa',
+        'sales_order_date_wa_delivered_wa',
+        'sales_order_date_wa_processed_wa',
+        'sales_order_date_wa_approved_wa',
         'sales_order_from_id',
         'sales_order_from_name',
         'sales_order_from_phone',
@@ -86,10 +91,10 @@ class Order extends Model
     public $datatable = [
         'sales_order_id' => [true => 'Code'],
         'sales_order_created_at' => [false => 'Delivery Date'],
-        'sales_order_date_order' => [true => 'Delivery Date'],
+        'sales_order_date_order' => [true => 'Tgl Order'],
         'crm_customer_name' => [false => 'Customer'],
-        'sales_order_from_name' => [true => 'Pickup'],
-        'sales_order_to_name' => [true => 'Contact'],
+        'sales_order_from_name' => [true => 'Branch'],
+        'sales_order_to_name' => [true => 'Customer'],
         'sales_order_to_phone' => [true => 'Phone'],
         'sales_order_status' => [true => 'Status'],
     ];
@@ -106,11 +111,17 @@ class Order extends Model
 
     public $status = [
         '1' => ['CREATE', 'warning'],
-        '2' => ['PAID', 'primary'],
-        '3' => ['PREPARE', 'success'],
-        '4' => ['DELIVERED', 'dark'],
+        '2' => ['CONFIRM', 'primary'],
+        '3' => ['PAID', 'success'],
+        '4' => ['PROCESSED', 'dark'],
+        '5' => ['COMPLETED', 'info'],
         '0' => ['CANCEL', 'danger'],
     ];
+
+    public function group()
+    {
+        return $this->hasOne(OrderGroup::class, 'sales_group_id', 'sales_order_group_id');
+    }
 
     public function detail()
     {
@@ -186,15 +197,9 @@ class Order extends Model
         });
 
         parent::saving(function ($model) {
-            // if(request()->has('sales_order_date_order')){
-            //     $model->sales_order_date_order = $model->sales_order_date_order->format('Y-m-d H:i:s');
-            // }
-            // if(request()->has('sales_order_payment_date') && !empty(request()->get('sales_order_payment_date'))){
-            //     $model->sales_order_payment_date = $model->sales_order_payment_date->format('Y-m-d H:i:s');
-            // }
-            // else{
-            //     $model->sales_order_payment_date = null;
-            // }
+            if(request()->has('sales_order_date_order')){
+                $model->sales_order_date_order = $model->sales_order_date_order->format('Y-m-d H:i:s');
+            }
         });
     }
 }

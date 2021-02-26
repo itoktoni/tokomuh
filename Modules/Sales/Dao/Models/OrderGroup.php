@@ -33,12 +33,11 @@ class OrderGroup extends Model
         'sales_group_deleted_by',
         'sales_group_date_order',
         'sales_group_date_invoice',
-        'sales_group_date_order_wa',
-        'sales_group_from_name',
-        'sales_group_from_phone',
-        'sales_group_from_email',
-        'sales_group_from_address',
-        'sales_group_from_area',
+        'sales_group_customer_name',
+        'sales_group_customer_phone',
+        'sales_group_customer_email',
+        'sales_group_customer_address',
+        'sales_group_customer_area',
         'sales_group_status',
         'sales_group_notes_user',
         'sales_group_notes_admin',
@@ -52,13 +51,15 @@ class OrderGroup extends Model
         'sales_group_payment_date',
         'sales_group_payment_bank_from',
         'sales_group_payment_person',
-        'sales_group_payment_bank_to_id',
+        'sales_group_payment_bank_to',
         'sales_group_payment_phone',
         'sales_group_payment_email',
         'sales_group_payment_attached',
         'sales_group_payment_value',
         'sales_group_payment_notes',
         'sales_group_core_user_id',
+        'sales_group_date_wa_approved_wa',
+        'sales_group_date_wa_created_wa',
     ];
 
     public $timestamps = true;
@@ -74,12 +75,6 @@ class OrderGroup extends Model
     public $searching = 'sales_group_id';
     public $datatable = [
         'sales_group_id' => [true => 'Code'],
-        'sales_group_created_at' => [false => 'Delivery Date'],
-        'sales_group_date_order' => [true => 'Delivery Date'],
-        'crm_customer_name' => [false => 'Customer'],
-        'sales_group_from_name' => [true => 'Pickup'],
-        'sales_group_to_name' => [true => 'Contact'],
-        'sales_group_to_phone' => [true => 'Phone'],
         'sales_group_status' => [true => 'Status'],
     ];
 

@@ -212,11 +212,11 @@ class CheckoutLivewire extends Component
         $group['sales_group_id'] = $autonumber_group;
         $group['sales_group_status'] = 1;
         $group['sales_group_order_date'] = date('Y-d-d H:i:s');
-        $group['sales_group_from_name'] = $this->name;
-        $group['sales_group_from_phone'] = $this->phone;
-        $group['sales_group_from_email'] = $this->email;
-        $group['sales_group_from_address'] = $this->address;
-        $group['sales_group_from_area'] = $this->area;
+        $group['sales_group_customer_name'] = $this->name;
+        $group['sales_group_customer_phone'] = Helper::convertPhone($this->phone);
+        $group['sales_group_customer_email'] = $this->email;
+        $group['sales_group_customer_address'] = $this->address;
+        $group['sales_group_customer_area'] = $this->area;
         $group['sales_group_notes_user'] = $this->notes;
 
         $sub_total = CartFacade::getSubTotal();
@@ -251,20 +251,20 @@ class CheckoutLivewire extends Component
                 $autonumber_order = Helper::autoNumber(OrderFacades::getTable(), OrderFacades::getKeyName(), 'SO' . date('Ym'), config('website.autonumber'));
 
                 $order['sales_order_id'] = $autonumber_order;
-                $order['sales_order_group_id'] = $autonumber_order;
+                $order['sales_order_group_id'] = $autonumber_group;
                 $order['sales_order_status'] = 1;
                 $order['sales_order_order_date'] = date('Y-d-d H:i:s');
 
                 $branch = BranchFacades::find($sales->branch_id);
                 $order['sales_order_from_id'] = $branch->branch_id;
                 $order['sales_order_from_name'] = $branch->branch_name;
-                $order['sales_order_from_phone'] = $branch->branch_phone;
+                $order['sales_order_from_phone'] = Helper::convertPhone($branch->branch_phone);
                 $order['sales_order_from_email'] = $branch->branch_email;
                 $order['sales_order_from_address'] = $branch->branch_address;
                 $order['sales_order_from_area'] = $branch->branch_rajaongkir_area_id;
 
                 $order['sales_order_to_name'] = $this->name;
-                $order['sales_order_to_phone'] = $this->phone;
+                $order['sales_order_to_phone'] = Helper::convertPhone($this->phone);
                 $order['sales_order_to_email'] = $this->email;
                 $order['sales_order_to_address'] = $this->address;
                 $order['sales_order_to_area'] = $this->area;
@@ -349,6 +349,8 @@ class CheckoutLivewire extends Component
             $this->order_total = $check_group['data']->sales_group_sum_total;
             $this->order_ongkir = $check_group['data']->sales_group_sum_ongkir;
         }
+
+        $this->emit('updateCart');
     }
 
 }

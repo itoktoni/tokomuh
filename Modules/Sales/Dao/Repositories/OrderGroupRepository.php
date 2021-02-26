@@ -19,10 +19,7 @@ class OrderGroupRepository extends OrderGroup implements MasterInterface
     public function dataRepository()
     {
         $list = Helper::dataColumn($this->datatable, $this->getKeyName());
-        return $this->select($list)
-        ->leftJoin(CustomerFacades::getTable(), CustomerFacades::getKeyName(), 'sales_order_to_id')
-        ->leftJoin(CompanyFacades::getTable(), CompanyFacades::getKeyName(), 'sales_order_from_id')
-        ->where('sales_order_status', '>', 0);
+        return $this->select($list);
     }
 
     public function deliveryRepository($id)

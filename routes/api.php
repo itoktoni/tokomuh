@@ -2,6 +2,7 @@
 
 use App\Dao\Facades\BranchFacades;
 use App\Dao\Facades\CompanyFacades;
+use App\Dao\Models\User as ModelsUser;
 use App\User;
 use Plugin\Helper;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use App\Dao\Repositories\CompanyRepository;
+use App\Dao\Repositories\TeamRepository;
 use Illuminate\Validation\ValidationException;
 use Modules\Item\Dao\Repositories\StockRepository;
 use michaelFrank\dynamicphoto\config\CkeditorUploud;
@@ -366,6 +368,24 @@ Route::match(
         return $query;
     }
 )->name('customer_api');
+
+Route::match(
+    [
+        'GET',
+        'POST'
+    ],
+    'user_api',
+    function () {
+        $input = request()->get('id');
+        $query = false;
+        if ($input) {
+            $user = new TeamRepository();
+            $query = $user->dataRepository($user->getKeyName(), $input)->first();
+            return $query->toArray() ?? false ;
+        }
+        return $query;
+    }
+)->name('user_api');
 
 Route::match(
     [

@@ -9,13 +9,14 @@ use App\Dao\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Dao\Interfaces\MasterInterface;
 use Illuminate\Database\QueryException;
+use Modules\Rajaongkir\Dao\Facades\AreaFacades;
 
 class TeamRepository extends User implements MasterInterface
 {
     public function dataRepository()
     {
         $list = Helper::dataColumn($this->datatable, $this->getKeyName());
-        return $this->select($list);
+        return $this->select($list)->leftJoin(AreaFacades::getTable(), AreaFacades::getKeyName(),'area');
     }
 
     public function saveRepository($request)

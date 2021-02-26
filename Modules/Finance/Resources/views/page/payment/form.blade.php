@@ -1,6 +1,3 @@
-@component('components.mask', ['array' => ['money']])
-@endcomponent
-
 @component('components.date', ['array' => ['date']])
 @endcomponent
 
@@ -112,7 +109,6 @@
     </div>
 </div>
 
-@if ($action['update'])
 
 <div class="form-group">
     {!! Form::label('name', 'Order Paid', ['class' => 'col-md-2 control-label']) !!}
@@ -138,4 +134,3 @@
     </div>
     @endif
 </div>
-@endif

@@ -54,7 +54,9 @@ use Modules\Sales\Http\Services\LanggananService;
 use Modules\Sales\Http\Services\PublicService;
 use Plugin\Helper;
 use Artesaos\SEOTools\Facades\SEOTools;
+use Modules\Finance\Dao\Facades\PaymentFacades;
 use Modules\Item\Dao\Facades\CategoryFacades;
+use Modules\Sales\Dao\Facades\OrderGroupFacades;
 
 class PublicController extends Controller
 {
@@ -302,7 +304,7 @@ class PublicController extends Controller
                 abort(404, 'Page not found !');
             }
 
-            return View(Helper::setViewFrontend('page'))->with($this->share([
+            return View(Helper::setViewFrontend(__FUNCTION__))->with($this->share([
                 'data' => $data,
             ]));
         }
@@ -333,9 +335,9 @@ class PublicController extends Controller
             $model = new PromoRepository();
             $data = $model->slugRepository($slug);
 
-            return View(Helper::setViewFrontend('page_promo'))->with([
+            return View(Helper::setViewFrontend('page_promo'))->with($this->share([
                 'data' => $data,
-            ]);
+            ]));
         }
 
         $promo = new PromoRepository();
@@ -856,7 +858,7 @@ class PublicController extends Controller
                 'payment_person' => 'required',
                 'payment_phone' => 'required',
                 'payment_value' => 'required',
-                'payment_email' => 'required|email',
+                // 'payment_email' => 'required|email',
                 'payment_date' => 'required',
                 'files' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             ];
@@ -875,64 +877,45 @@ class PublicController extends Controller
                 return redirect()->back()->withErrors($validate)->withInput();
             }
 
-            if (OrderFacades::find($request['code'])) {
+            if (OrderGroupFacades::find($request['code'])) {
 
-                $update = OrderFacades::showRepository($request['code']);
+                $update = OrderGroupFacades::showRepository($request['code']);
                 $check['status'] = false;
                 if ($update) {
+                    $request['sales_group_payment_person'] = $request['payment_person'];
+                    $request['sales_group_payment_value'] = $request['payment_value'];
+                    $request['sales_group_payment_phone'] = $request['payment_phone'];
+                    $request['sales_group_status'] = 2;
+                    $request['sales_group_payment_email'] = $request['payment_email'];
+                    $request['sales_group_payment_bank_from'] = $request['payment_bank_from'];
+                    $request['sales_group_payment_bank_to'] = $request['payment_bank_to'];
+                    $request['sales_group_payment_date'] = $request['payment_date'];
+                    $request['sales_group_payment_notes'] = $request['payment_notes'];
 
-                    $file = 'files';
-                    $name = null;
-                    if (request()->has($file)) {
+                    $payment = [
+                        'finance_payment_amount' => $request['payment_value'],
+                        'finance_payment_sales_order_id' => $request['code'],
+                        'finance_payment_person' => $request['payment_person'],
+                        'finance_payment_phone' =>  $request['payment_phone'],
+                        'finance_payment_email' => $request['payment_email'],
+                        'finance_payment_date' => $request['payment_date'],
+                        'files' => request()->get('files'),
+                        'finance_payment_to' => $request['payment_bank_to'],
+                        'finance_payment_from' => $request['payment_bank_from'],
+                        'finance_payment_note' => $request['payment_notes'],
+                        'finance_payment_in' => 1,
+                        'finance_payment_status' => 0,
+                        'finance_payment_created_by' => $request['payment_person'],
+                    ];
 
-                        $file = request()->file($file);
-                        $name = Helper::uploadImage($file, Helper::getTemplate(__CLASS__));
-
-                        $update->item_product_image = $name;
-                    }
-
-                    $request['sales_order_payment_person'] = $request['payment_person'];
-                    $request['sales_order_payment_bank_to_id'] = $request['payment_bank'];
-                    $request['sales_order_payment_date'] = $request['payment_date'];
-                    $request['sales_order_payment_notes'] = $request['payment_notes'];
-
-                    $request['sales_order_term_top'] = 'CASH';
-                    $request['sales_order_payment_file'] = $name;
-                    $check = OrderFacades::updateRepository($request['code'], $request);
+                    $check = OrderGroupFacades::updateRepository($request['code'], $request);
+                    $check = PaymentFacades::saveRepository($payment);
                 }
 
                 if ($check['status']) {
                     return redirect()->route('confirmation')->with('success', 'Data has been Success');
                 }
 
-            } else if (SubscribeFacades::find($request['code'])) {
-                $update = SubscribeFacades::showRepository($request['code']);
-                $check['status'] = false;
-                if ($update) {
-
-                    $file = 'files';
-                    $name = null;
-                    if (request()->has($file)) {
-
-                        $file = request()->file($file);
-                        $name = Helper::uploadImage($file, Helper::getTemplate(__CLASS__));
-
-                        $update->item_product_image = $name;
-                    }
-
-                    $request['sales_langganan_payment_person'] = $request['payment_person'];
-                    $request['sales_langganan_payment_bank_to_id'] = $request['payment_bank'];
-                    $request['sales_langganan_payment_date'] = $request['payment_date'];
-                    $request['sales_order_payment_notes'] = $request['payment_notes'];
-
-                    $request['sales_langganan_term_top'] = 'CASH';
-                    $request['sales_langganan_payment_file'] = $name;
-                    $check = SubscribeFacades::updateRepository($request['code'], $request);
-                }
-
-                if ($check['status']) {
-                    return redirect()->route('confirmation')->with('success', 'Data has been Success');
-                }
             } else {
                 $validate->errors()->add('code', 'Nomer Order tidak Terdaftar !');
                 return redirect()->back()->withErrors($validate)->withInput();

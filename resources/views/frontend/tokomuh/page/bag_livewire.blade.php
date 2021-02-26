@@ -81,13 +81,13 @@
         </div>
         @endif
         <!-- End of Cart Total -->
-        @if(session()->has('area'))
+        @if(session('area'))
         <div class="cart-action mt-3">
             <a href="{{ route('checkout') }}" class="btn btn-dark"><span>Checkout</span></a>
         </div>
         @else
         <div class="cart-action mt-3">
-            <a href="{{ route('cart') }}" class="btn btn-dark"><span>Confirm Cart</span></a>
+            <a href="{{ route('cart') }}" class="btn btn-dark"><span>Complete Cart</span></a>
         </div>
         @endif
 

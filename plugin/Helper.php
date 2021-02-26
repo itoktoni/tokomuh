@@ -939,13 +939,13 @@ class Helper
         if (!preg_match('/[^+0-9]/', trim($nohp))) {
             // cek apakah no hp karakter 1-3 adalah +62
             if (substr(trim($nohp), 0, 3) == '62') {
-                $hp = trim($nohp);
+                $nohp = trim($nohp);
             }
             // cek apakah no hp karakter 1 adalah 0
             elseif (substr(trim($nohp), 0, 1) == '0') {
-                $hp = '62' . substr(trim($nohp), 1);
+                $nohp = '62' . substr(trim($nohp), 1);
             }
         }
-        return $hp;
+        return $nohp;
     }
 }

@@ -217,9 +217,12 @@
                             </td>
                         </tr>
                     </table>
-
-                    <a href="{{ route('checkout') }}" wire:click="actionCheckout"
+                    @if(session('area'))
+                    <a href="{{ route('checkout') }}"
                         class="btn btn-dark btn-checkout mb-5">Proceed to checkout</a>
+                    @else
+                    <a class="btn btn-dark btn-checkout mb-5">Please Complete Cart</a>
+                    @endif
                 </div>
             </div>
         </aside>

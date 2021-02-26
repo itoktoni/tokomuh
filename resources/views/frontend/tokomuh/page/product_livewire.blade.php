@@ -108,17 +108,10 @@
                 <input wire:model="qty" value="{{ $qty }}" class="quantity form-control" type="number">
                 <button wire:click="actionPlus" class="d-icon-plus"></button>
             </div>
-            @if($price > 0)
             <button wire:click="actionCart" class="btn-product btn-cart">
-                <i class="d-icon-bag"></i>Add To Cart
+                <i class="d-icon-bag"></i>{{ $price > 0 ? 'Add To Cart' : 'Out of stock' }}
             </button>
-            @else
-            <button class="btn-default btn-cart" style="background-color: grey !important;">
-                <i class="d-icon-bag"></i><strong>SELECT PRODUCT</strong>
-            </button>
-            @endif
         </div>
-
 
     </div>
 

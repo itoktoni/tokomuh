@@ -16,6 +16,10 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\Console',
         'App\Console\Commands\SendEmail',
         'App\Console\Commands\CancelOrder',
+        'App\Console\Commands\WaOrderCreated',
+        'App\Console\Commands\WaPaymentCreated',
+        'App\Console\Commands\WaOrderApproved',
+        'App\Console\Commands\WaPaymentApproved',
     ];
 
     /**

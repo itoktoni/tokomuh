@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Services\MasterService;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Dao\Repositories\BranchRepository;
+use App\Dao\Repositories\TeamRepository;
 use Modules\Finance\Dao\Facades\BankFacades;
 use Modules\Sales\Http\Requests\OrderRequest;
 use Modules\Sales\Http\Services\OrderService;
@@ -59,7 +60,7 @@ class OrderController extends Controller
         $promo = Helper::shareOption((new PromoRepository()));
         $branch = Helper::shareOption((new BranchRepository()));
         $bank = Helper::shareOption((new BankRepository()));
-        $customers = Helper::shareOption((new CustomerRepository()));
+        $customers = Helper::shareOption((new TeamRepository()));
         $delivery = Helper::shareOption((new DeliveryRepository()));
         $status = Helper::shareStatus(self::$model->status);
 
@@ -203,13 +204,13 @@ class OrderController extends Controller
             $id = request()->get('code');
 
             $data = $service->show(self::$model, ['detail','detail', 'company']);
-            $data->sales_order_print_counter++;
-            $data->save();
+            // $data->sales_order_print_counter++;
+            // $data->save();
             // dd($data->deliveryRepository($id)->get());
             $pasing = [
                 'master' => $data,
                 'detail' => $data->detail,
-                'banks' => BankFacades::dataRepository()->first(),
+                // 'banks' => BankFacades::dataRepository()->first(),
             ];
             $pdf = PDF::loadView(Helper::setViewPrint(__FUNCTION__, $this->folder), $pasing)->setPaper('a6', 'potrait');
             // return $pdf->download();

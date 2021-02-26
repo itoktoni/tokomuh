@@ -102,6 +102,7 @@ class ComposerStaticInitec153ae97542422ebd7f95238a1bc36e
         'edf2acaddddad78269a170546af4b6f3' => __DIR__ . '/../..' . '/plugin/Notes.php',
         'a90d33e8c7555995f0566f22ea68f843' => __DIR__ . '/../..' . '/plugin/Alert.php',
         'a3cc73abfc338bbac35a4a3b355f99cd' => __DIR__ . '/../..' . '/plugin/Response.php',
+        'f20a3434298d0ff18f8ca85b6d7f5843' => __DIR__ . '/../..' . '/plugin/Whatsapp.php',
         '9a7d487c7cf958d82959ee393fd1d2a2' => __DIR__ . '/../..' . '/plugin/Chrome.php',
     );
 
@@ -836,6 +837,10 @@ class ComposerStaticInitec153ae97542422ebd7f95238a1bc36e
         'App\\Console\\Commands\\Console' => __DIR__ . '/../..' . '/app/Console/Commands/Console.php',
         'App\\Console\\Commands\\Installation' => __DIR__ . '/../..' . '/app/Console/Commands/Installation.php',
         'App\\Console\\Commands\\SendEmail' => __DIR__ . '/../..' . '/app/Console/Commands/SendEmail.php',
+        'App\\Console\\Commands\\WaOrderApproved' => __DIR__ . '/../..' . '/app/Console/Commands/WaOrderApproved.php',
+        'App\\Console\\Commands\\WaOrderCreated' => __DIR__ . '/../..' . '/app/Console/Commands/WaOrderCreated.php',
+        'App\\Console\\Commands\\WaPaymentApproved' => __DIR__ . '/../..' . '/app/Console/Commands/WaPaymentApproved.php',
+        'App\\Console\\Commands\\WaPaymentCreated' => __DIR__ . '/../..' . '/app/Console/Commands/WaPaymentCreated.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Dao\\Dimentions\\BranchDimention' => __DIR__ . '/../..' . '/app/Dao/Dimentions/BranchDimention.php',
         'App\\Dao\\Facades\\ActionFacades' => __DIR__ . '/../..' . '/app/Dao/Facades/ActionFacades.php',
@@ -4427,6 +4432,7 @@ class ComposerStaticInitec153ae97542422ebd7f95238a1bc36e
         'Modules\\Sales\\Dao\\Models\\Order' => __DIR__ . '/../..' . '/Modules/Sales/Dao/Models/Order.php',
         'Modules\\Sales\\Dao\\Models\\OrderDetail' => __DIR__ . '/../..' . '/Modules/Sales/Dao/Models/OrderDetail.php',
         'Modules\\Sales\\Dao\\Models\\OrderDetailVariant' => __DIR__ . '/../..' . '/Modules/Sales/Dao/Models/OrderDetailVariant.php',
+        'Modules\\Sales\\Dao\\Models\\OrderGroup' => __DIR__ . '/../..' . '/Modules/Sales/Dao/Models/OrderGroup.php',
         'Modules\\Sales\\Dao\\Models\\Quotation' => __DIR__ . '/../..' . '/Modules/Sales/Dao/Models/Quotation.php',
         'Modules\\Sales\\Dao\\Models\\QuotationDetail' => __DIR__ . '/../..' . '/Modules/Sales/Dao/Models/QuotationDetail.php',
         'Modules\\Sales\\Dao\\Models\\Subscribe' => __DIR__ . '/../..' . '/Modules/Sales/Dao/Models/Subscribe.php',

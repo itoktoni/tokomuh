@@ -15,6 +15,7 @@ use Modules\Finance\Dao\Repositories\FlagRepository;
 use Modules\Finance\Dao\Repositories\AccountRepository;
 use Modules\Finance\Dao\Repositories\PaymentRepository;
 use Modules\Procurement\Dao\Repositories\PurchaseRepository;
+use Modules\Sales\Dao\Repositories\OrderGroupRepository;
 
 class PaymentController extends Controller
 {
@@ -41,7 +42,7 @@ class PaymentController extends Controller
         $flag = Helper::createOption((new FlagRepository()), false);
         $account = Helper::createOption((new AccountRepository()));
         $bank = Helper::createOption((new BankRepository()), false, true)->pluck('finance_bank_name', 'finance_bank_name');
-        $order = Helper::createOption((new OrderRepository()));
+        $order = Helper::createOption((new OrderGroupRepository()));
         $view = [
             'template' => $this->template,
             'status' => Helper::shareStatus(self::$model->status),
@@ -70,31 +71,12 @@ class PaymentController extends Controller
         if (request()->isMethod('POST')) {
 
             $service->update(self::$model, $request->all());
-            if (request()->has('finance_payment_paid')) {
-                $order_id = request()->get('finance_payment_sales_order_id');
-                if ($order_id) {
-                    self::$model->paidRepository($order_id);
-                }
-            }
             return redirect()->route($this->getModule() . '_data');
         }
 
         if (request()->has('code')) {
 
             $data = $service->show(self::$model);
-            return view(Helper::setViewUpdate())->with($this->share([
-                'model'        => $data,
-                'key'          => self::$model->getKeyName()
-            ]));
-        }
-
-        if (request()->has('so')) {
-            $id = request()->get('so');
-            $data = self::$model->soRepository($id);
-            if (!$data) {
-                Alert::error('SO ' . $id . ' Belum dibayar');
-                return redirect()->back();
-            }
             return view(Helper::setViewUpdate())->with($this->share([
                 'model'        => $data,
                 'key'          => self::$model->getKeyName()

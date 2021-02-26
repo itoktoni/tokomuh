@@ -101,5 +101,6 @@ return array(
     'edf2acaddddad78269a170546af4b6f3' => $baseDir . '/plugin/Notes.php',
     'a90d33e8c7555995f0566f22ea68f843' => $baseDir . '/plugin/Alert.php',
     'a3cc73abfc338bbac35a4a3b355f99cd' => $baseDir . '/plugin/Response.php',
+    'f20a3434298d0ff18f8ca85b6d7f5843' => $baseDir . '/plugin/Whatsapp.php',
     '9a7d487c7cf958d82959ee393fd1d2a2' => $baseDir . '/plugin/Chrome.php',
 );
