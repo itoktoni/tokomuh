@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Finance\Dao\Models\Bank;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Finance\Dao\Models\Account;
+use Modules\Item\Dao\Models\ProductDetail;
 use Modules\Procurement\Dao\Repositories\PurchaseRepository;
+use Modules\Sales\Dao\Facades\OrderFacades;
 use Modules\Sales\Dao\Facades\OrderGroupFacades;
 use Modules\Sales\Dao\Models\Order;
 use Modules\Sales\Dao\Repositories\OrderRepository;
@@ -29,9 +31,7 @@ class Payment extends Model
     'finance_payment_attachment',
     'finance_payment_description',
     'finance_payment_note',
-    'finance_payment_in',
-    'finance_payment_out',
-    'finance_payment_paid',
+    'finance_payment_in_out',
     'finance_payment_approve_amount',
     'finance_payment_status',
     'finance_payment_approved_at',
@@ -41,9 +41,13 @@ class Payment extends Model
     'finance_payment_updated_at',
     'finance_payment_updated_by',
     'finance_payment_voucher',
+    'finance_payment_phone',
     'finance_payment_email',
-    'finance_payment_email_date',
-    'finance_payment_email_approve_date'
+    'finance_payment_date_wa_created',
+    'finance_payment_date_wa_approved',
+    'finance_payment_date_email_created',
+    'finance_payment_date_email_approved',
+    'finance_payment_paid',
   ];
 
   public $with = ['account', 'order'];
@@ -68,9 +72,11 @@ class Payment extends Model
     'finance_payment_email'         => [false => 'Email'],
     'finance_payment_from'         => [false => 'From'],
     'finance_payment_to'         => [false => 'To'],
+    'finance_payment_phone'         => [false => 'phone'],
     'finance_payment_account_id'         => [true => 'Account'],
     'finance_payment_amount'  => [true => 'Amount'],
     'finance_payment_approve_amount'  => [true => 'Approve'],
+    'finance_payment_in_out'  => [true => 'IN OUT'],
     'finance_payment_status'  => [true => 'Status'],
     'finance_payment_note' => [false => 'Notes'],
     'finance_payment_created_at'     => [false => 'Created At'],
@@ -88,6 +94,11 @@ class Payment extends Model
     '0' => ['APPROVE', 'success'],
     '1' => ['PENDING', 'warning'],
     '2' => ['REJECT', 'danger'],
+  ];
+
+  public $in_out = [
+    '0' => ['OUT', 'danger'],
+    '1' => ['IN', 'success'],
   ];
 
   public function account()
@@ -129,7 +140,7 @@ class Payment extends Model
       if (request()->has('finance_payment_paid') && request()->get('finance_payment_paid') == 1) {
 
         if ($model->finance_payment_sales_order_id) {
-
+          
           $getOrder = OrderGroupFacades::showRepository($model->finance_payment_sales_order_id);
           if ($getOrder && $getOrder->sales_group_status < 3) {
 
@@ -139,6 +150,16 @@ class Payment extends Model
             OrderGroupFacades::updateRepository($model->finance_payment_sales_order_id, [
               'sales_group_status' => 3
             ]);
+
+            if($getOrder->detail->count() > 1){
+              foreach($getOrder->detail->where('sales_order_detail_stock', 1)->pluck('sales_order_detail_qty', 'sales_order_detail_item_product_detai_id') as $key => $value){
+                $product_detail = ProductDetail::find($key);
+                if($product_detail){
+                  $product_detail->item_detail_stock_qty = $product_detail->item_detail_stock_qty - $value;
+                  $product_detail->save(); 
+                }
+              }
+            }
           }
         }
       }

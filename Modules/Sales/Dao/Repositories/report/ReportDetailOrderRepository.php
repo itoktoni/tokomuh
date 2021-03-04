@@ -53,7 +53,6 @@ class ReportDetailOrderRepository extends Order implements FromView, ShouldAutoS
     {
         $query = $this->model
         ->leftJoin($this->branch->getTable(), 'sales_order_from_id', $this->branch->getKeyName())
-        ->leftJoin($this->delivery->getTable(), 'sales_order_delivery_type', $this->delivery->getKeyName())
         ->leftJoin($this->detail->getTable(), $this->model->getKeyName(), 'sales_order_detail_order_id')
         ->leftJoin($this->product->getTable(), 'sales_order_detail_item_product_id', $this->product->getKeyName())
         ->leftJoin($this->category->getTable(), 'item_product_item_category_id', $this->category->getKeyName())
@@ -65,11 +64,7 @@ class ReportDetailOrderRepository extends Order implements FromView, ShouldAutoS
                 'sales_order_updated_by',
                 'sales_order_deleted_at',
                 'sales_order_deleted_by',
-                'sales_order_code_reference',
-                'sales_order_code_po',
-                'sales_order_code_quotation',
                 'sales_order_date_order',
-                'sales_order_date_quotation',
                 'sales_order_from_id',
                 'sales_order_from_name',
                 'sales_order_from_phone',
@@ -83,23 +78,12 @@ class ReportDetailOrderRepository extends Order implements FromView, ShouldAutoS
                 'sales_order_to_address',
                 'sales_order_to_area',
                 'sales_order_status',
-                'sales_order_term_top',
-                'sales_order_term_product',
-                'sales_order_term_valid',
-                'sales_order_notes_internal',
-                'sales_order_notes_external',
                 'sales_order_discount_name',
-                'sales_order_discount_percent',
                 'sales_order_discount_value',
-                'sales_order_tax_id',
-                'sales_order_tax_percent',
-                'sales_order_tax_value',
                 'sales_order_sum_product',
                 'sales_order_sum_discount',
-                'sales_order_sum_tax',
                 'sales_order_sum_ongkir',
                 'sales_order_sum_total',
-                'sales_order_attached_po',
                 'sales_order_payment_date',
                 'sales_order_payment_bank_from',
                 'sales_order_payment_bank_to_id',
@@ -109,13 +93,8 @@ class ReportDetailOrderRepository extends Order implements FromView, ShouldAutoS
                 'sales_order_payment_file',
                 'sales_order_payment_value',
                 'sales_order_payment_notes',
-                'sales_order_delivery_type',
-                'sales_order_delivery_name',
-                'sales_order_print_counter',
                 'sales_order_core_user_id',
                 'branch_name',
-                'rajaongkir_delivery_name',
-                'sales_order_delivery_name',
                 'item_category_name',
                 'item_product.*',
                 'sales_order_detail.*',

@@ -212,6 +212,10 @@ class CheckoutLivewire extends Component
         $group['sales_group_id'] = $autonumber_group;
         $group['sales_group_status'] = 1;
         $group['sales_group_order_date'] = date('Y-d-d H:i:s');
+        if(auth()->check()){
+
+            $group['sales_group_customer_id'] = auth()->user()->id;
+        }
         $group['sales_group_customer_name'] = $this->name;
         $group['sales_group_customer_phone'] = Helper::convertPhone($this->phone);
         $group['sales_group_customer_email'] = $this->email;
@@ -230,6 +234,7 @@ class CheckoutLivewire extends Component
             $discount_name = $disc->getAttributes()['name'] ?? '';
         }
 
+        $group['sales_group_discount_code'] = $discount_code;
         $group['sales_group_discount_name'] = $discount_name;
         $group['sales_group_discount_value'] = abs($discount_value);
 
@@ -253,7 +258,9 @@ class CheckoutLivewire extends Component
                 $order['sales_order_id'] = $autonumber_order;
                 $order['sales_order_group_id'] = $autonumber_group;
                 $order['sales_order_status'] = 1;
-                $order['sales_order_order_date'] = date('Y-d-d H:i:s');
+                $order['sales_order_date_order'] = date('Y-m-d H:i:s');
+                $order['sales_order_courier_date'] = date('Y-m-d');
+                $group['sales_order_notes_user'] = $this->notes;
 
                 $branch = BranchFacades::find($sales->branch_id);
                 $order['sales_order_from_id'] = $branch->branch_id;
@@ -270,6 +277,7 @@ class CheckoutLivewire extends Component
                 $order['sales_order_to_area'] = $this->area;
 
                 $order['sales_order_courier_code'] = $sales->branch_courier['code'] ?? '';
+                $order['sales_order_courier_name'] = $sales->branch_courier['code'].' ('.$sales->branch_courier['service'].') Harga : '.Helper::createRupiah($sales->branch_courier['price']) ?? '';
                 $order['sales_order_courier_service'] = $sales->branch_courier['service'] ?? '';
 
                 $order['sales_order_sum_weight'] = $sales->branch_weight;
@@ -288,20 +296,20 @@ class CheckoutLivewire extends Component
 
                         $product['sales_order_detail_notes'] = $item->notes;
 
-                        $name = $item->product_name;
+                        // $name = $item->product_name;
 
-                        if (!empty($item->color_id)) {
-                            $name = $name . ' ' . $item->color_name;
-                        }
-                        if (!empty($item->size_id)) {
-                            $name = $name . ' ' . $item->size_name;
-                        }
-                        if (!empty($item->variant_id)) {
-                            $name = $name . ' ' . $item->variant_name;
-                        }
-
+                        // if (!empty($item->color_id)) {
+                        //     $name = $name . ' ' . $item->color_name;
+                        // }
+                        // if (!empty($item->size_id)) {
+                        //     $name = $name . ' ' . $item->size_name;
+                        // }
+                        // if (!empty($item->variant_id)) {
+                        //     $name = $name . ' ' . $item->variant_name;
+                        // }
+                        $product['sales_order_detail_item_product_detai_id'] = $item->id;
                         $product['sales_order_detail_item_product_id'] = $item->product_id;
-                        $product['sales_order_detail_item_product_description'] = $name;
+                        $product['sales_order_detail_item_product_description'] = $item->product_name;
                         $product['sales_order_detail_item_product_weight'] = $item->product_weight;
 
                         $product['sales_order_detail_qty'] = $item->qty;

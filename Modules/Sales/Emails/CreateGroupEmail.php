@@ -11,7 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Finance\Dao\Facades\BankFacades;
 use Modules\Finance\Dao\Repositories\BankRepository;
 
-class CreateOrderEmail extends Mailable
+class CreateGroupEmail extends Mailable
 {
     use SerializesModels;
 
@@ -26,10 +26,12 @@ class CreateOrderEmail extends Mailable
     public $detail;
     public $account;
 
-    public function __construct($order)
+    public function __construct($group)
     {
-        $this->master = $order;
-        $this->detail = $order->detail;
+        $this->master = $group;
+        $this->order = $group->order;
+        $this->detail = $group->detail;
+        $this->account = BankFacades::dataRepository()->get();
     }
 
     /**
@@ -39,6 +41,6 @@ class CreateOrderEmail extends Mailable
      */
     public function build()
     {
-        return $this->view(Helper::setViewEmail('create_order_email', 'sales'));
+        return $this->view(Helper::setViewEmail('create_group_email', 'sales'));
     }
 }

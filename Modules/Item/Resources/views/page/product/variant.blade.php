@@ -15,7 +15,7 @@
             <div class="panel-body line">
 
                 <div class="col-md-2 col-ld-2 mb-sm">
-                
+
                     <input type="hidden" name="item_detail_product_id" value="{{ $model->item_product_id }}">
                     <input type="hidden" name="item_detail_product_name" value="{{ $model->item_product_name }}">
                     <input type="hidden" name="item_detail_product_image" value="{{ $model->item_product_image }}">
@@ -31,15 +31,32 @@
 
                         {!! Form::label('name', 'Custom Name', ['class' => 'col-md-2 control-label']) !!}
                         <div class="col-md-4 {{ $errors->has('item_detail_name') ? 'has-error' : ''}}">
-                            {!! Form::text('item_detail_name', $data->item_detail_name ?? null, ['class' => 'form-control','placeholder' => $model->item_product_name.' Custom']) !!}
+                            {!! Form::text('item_detail_name', $data->item_detail_name ?? null, ['class' =>
+                            'form-control','placeholder' => $model->item_product_name.' Custom']) !!}
                             {!! $errors->first('item_detail_name', '<p class="help-block">:message</p>') !!}
                         </div>
 
                         {!! Form::label('name', 'Custom Price', ['class' => 'col-md-2 control-label']) !!}
                         <div class="col-md-4 {{ $errors->has('item_detail_price') ? 'has-error' : ''}}">
-                            {!! Form::text('item_detail_price', $data->item_detail_price ?? null, ['class' => 'form-control', 'placeholder' =>
+                            {!! Form::text('item_detail_price', $data->item_detail_price ?? null, ['class' =>
+                            'form-control', 'placeholder' =>
                             Helper::createRupiah($model->item_product_price)]) !!}
                             {!! $errors->first('item_detail_price', '<p class="help-block">:message</p>') !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        {!! Form::label('name', 'Enable Stock', ['class' => 'col-md-2 control-label']) !!}
+                        <div class="col-md-4 {{ $errors->has('item_detail_stock_enable') ? 'has-error' : ''}}">
+                            {{ Form::select('item_detail_stock_enable', ['0' => 'No', '1' => 'Yes'], $data->item_detail_stock_enable ?? null, ['class'=> 'form-control', 'data-plugin-selectTwo']) }}
+                            {!! $errors->first('item_detail_stock_enable', '<p class="help-block">:message</p>') !!}
+                        </div>
+
+                        {!! Form::label('name', 'Stock Qty', ['class' => 'col-md-2 control-label']) !!}
+                        <div class="col-md-4 {{ $errors->has('item_detail_stock_qty') ? 'has-error' : ''}}">
+                            {!! Form::text('item_detail_stock_qty', $data->item_detail_stock_qty ?? null, ['class' =>
+                            'form-control', ]) !!}
+                            {!! $errors->first('item_detail_stock_qty', '<p class="help-block">:message</p>') !!}
                         </div>
                     </div>
 
@@ -85,14 +102,15 @@
             @if(isset($detail) && !empty($detail))
             @include($folder.'::page.'.$template.'.table')
             @endif
-            
+
             <input type="hidden" name="item_detail_id" value="{{ $data->item_detail_id ?? null }}">
             <div class="navbar-fixed-bottom" id="menu_action">
                 <div class="text-right" style="padding:5px">
 
                     <a id="linkMenu" href="{!! route($module.'_data') !!}"
                         class="btn btn-warning">@lang('pages.back')</a>
-                    <a class="btn btn-default" href="{{ route($module.'_variant', ['code' => $model->{$model->getKeyName()}]) }}">Reset</a>
+                    <a class="btn btn-default"
+                        href="{{ route($module.'_variant', ['code' => $model->{$model->getKeyName()}]) }}">Reset</a>
                     <button type="submit" class="btn btn-primary">@lang('pages.save')</button>
 
                 </div>

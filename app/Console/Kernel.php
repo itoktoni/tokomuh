@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\WaPaymentCreated',
         'App\Console\Commands\WaOrderApproved',
         'App\Console\Commands\WaPaymentApproved',
+        'App\Console\Commands\TrackingOrder',
     ];
 
     /**

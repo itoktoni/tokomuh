@@ -67,10 +67,10 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('name', 'Account', ['class' => 'col-md-2 control-label']) !!}
-    <div class="col-md-4 {{ $errors->has('finance_payment_account_id') ? 'has-error' : ''}}">
-        {{ Form::select('finance_payment_account_id', $account, null, ['class'=> 'form-control']) }}
-        {!! $errors->first('finance_payment_account_id', '<p class="help-block">:message</p>') !!}
+    {!! Form::label('name', 'Type', ['class' => 'col-md-2 control-label']) !!}
+    <div class="col-md-4 {{ $errors->has('finance_payment_in_out') ? 'has-error' : ''}}">
+        {{ Form::select('finance_payment_in_out', ['0' => 'OUT', '1' => 'IN'], null, ['class'=> 'form-control']) }}
+        {!! $errors->first('finance_payment_in_out', '<p class="help-block">:message</p>') !!}
     </div>
 
     {!! Form::label('name', 'Reference Person', ['class' => 'col-md-2 control-label']) !!}

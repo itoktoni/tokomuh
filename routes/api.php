@@ -193,7 +193,7 @@ Route::match(
                     $items[] = [
                         'branch' => $branch,
                         'weight' => $weight,
-                        'courier_code' => strtoupper($courier),
+                        'courier_code' => $courier,
                         'courier_name' => $data['results'][0]['name'],
                         'courier_service' => $value['service'],
                         'courier_desc' => $value['description'],

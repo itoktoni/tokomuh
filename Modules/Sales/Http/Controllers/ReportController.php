@@ -2,27 +2,20 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Plugin\Helper;
-use Plugin\Response;
-use Maatwebsite\Excel\Excel;
+use App\Dao\Repositories\BranchRepository;
 use App\Http\Controllers\Controller;
-use Modules\Item\Dao\Repositories\SizeRepository;
-use Modules\Item\Dao\Repositories\ColorRepository;
-use Modules\Item\Dao\Repositories\ReportRepository;
-use Modules\Sales\Dao\Repositories\OrderRepository;
+use Maatwebsite\Excel\Excel;
+use Modules\Finance\Dao\Models\Payment;
 use Modules\Item\Dao\Repositories\ProductRepository;
 use Modules\Marketing\Dao\Repositories\PromoRepository;
-use Modules\Item\Dao\Repositories\report\ReportInRepository;
-use Modules\Procurement\Dao\Repositories\PurchaseRepository;
-use Modules\Item\Dao\Repositories\report\ReportOutRepository;
-use Modules\Item\Dao\Repositories\report\ReportRealRepository;
-use Modules\Item\Dao\Repositories\report\ReportStockRepository;
+use Modules\Rajaongkir\Dao\Repositories\CourierRepository;
+use Modules\Sales\Dao\Repositories\OrderRepository;
 use Modules\Sales\Dao\Repositories\report\ReportDeliveryRepository;
-use Modules\Sales\Dao\Repositories\report\ReportPenjualanRepository;
-use Modules\Sales\Dao\Repositories\report\ReportProductionRepository;
 use Modules\Sales\Dao\Repositories\report\ReportDetailOrderRepository;
+use Modules\Sales\Dao\Repositories\report\ReportPaymentRepository;
+use Modules\Sales\Dao\Repositories\report\ReportProductionRepository;
 use Modules\Sales\Dao\Repositories\report\ReportSummaryOrderRepository;
-use Modules\Procurement\Dao\Repositories\report\ReportPurchaseOrderRepository;
+use Plugin\Helper;
 
 class ReportController extends Controller
 {
@@ -34,7 +27,7 @@ class ReportController extends Controller
     public function __construct(Excel $excel)
     {
         $this->excel = $excel;
-        $this->template  = Helper::getTemplate(__CLASS__);
+        $this->template = Helper::getTemplate(__CLASS__);
     }
 
     public function index()
@@ -44,18 +37,14 @@ class ReportController extends Controller
 
     private function share($data = [])
     {
-        $product = Helper::shareOption(new ProductRepository());
         $purchase = Helper::shareOption(new OrderRepository());
-        $promo = Helper::shareOption(new PromoRepository(), false, true)->pluck('marketing_promo_name', 'marketing_promo_code')->prepend('Select All Promo', '');
+        $promo = Helper::shareOption(new PromoRepository())->prepend('Select All Promo', '');
         $status = Helper::shareStatus((new OrderRepository())->status)->prepend('All Status', '');
-        $statusp = Helper::shareStatus((new OrderRepository())->status)->prepend('All Status', '');
 
         $view = [
             'promo' => $promo,
-            'product' => $product,
             'status' => $status,
             'purchase' => $purchase,
-            'statusp' => $statusp,
             'template' => $this->template,
         ];
 
@@ -68,26 +57,50 @@ class ReportController extends Controller
             $name = 'report_sales_order_' . date('Y_m_d') . '.xlsx';
             return $this->excel->download(new ReportSummaryOrderRepository(), $name);
         }
-        return view(Helper::setViewForm($this->template, __FUNCTION__, config('folder')))->with($this->share());
+        
+        $branch = Helper::shareOption(new BranchRepository(), false, true)->pluck('branch_name', 'branch_id')->prepend('Select Branch', '');
+        $courier = Helper::shareOption(new CourierRepository(), false, true)->pluck('rajaongkir_courier_name', 'rajaongkir_courier_code')->prepend('Select Courier', '');
+        $order = Helper::shareOption(new OrderRepository());
+
+        return view(Helper::setViewForm($this->template, __FUNCTION__, config('folder')))->with($this->share([
+            'data_branch' => $branch,
+            'data_courier' => $courier,
+            'data_order' => $order,
+        ]));
     }
 
-    
     public function order_detail()
     {
         if (request()->isMethod('POST')) {
-            $name = 'report_sales_order_' . date('Y_m_d') . '.xlsx';
+            $name = 'report_sales_order_detail_' . date('Y_m_d') . '.xlsx';
             return $this->excel->download(new ReportDetailOrderRepository(), $name);
         }
-        return view(Helper::setViewForm($this->template, __FUNCTION__, config('folder')))->with($this->share());
+
+        $product = Helper::shareOption(new ProductRepository());
+        $order = Helper::shareOption(new OrderRepository());
+        $branch = Helper::shareOption(new BranchRepository(), false, true)->pluck('branch_name', 'branch_id')->prepend('Select Branch', '');
+
+        return view(Helper::setViewForm($this->template, __FUNCTION__, config('folder')))->with($this->share([
+            'data_product' => $product,
+            'data_branch' => $branch,
+            'data_order' => $order,
+        ]));
     }
 
-    public function production()
+    public function payment()
     {
         if (request()->isMethod('POST')) {
-            $name = 'report_production_' . date('Y_m_d') . '.xlsx';
-            return $this->excel->download(new ReportProductionRepository(), $name);
+            $name = 'report_payment_' . date('Y_m_d') . '.xlsx';
+            return $this->excel->download(new ReportPaymentRepository(), $name);
         }
-        return view(Helper::setViewForm($this->template, __FUNCTION__, config('folder')))->with($this->share());
+        
+        $branch = Helper::shareOption(new BranchRepository(), false, true)->pluck('branch_name', 'branch_id')->prepend('Select Branch', '');
+        $payment = new Payment();
+        return view(Helper::setViewForm($this->template, __FUNCTION__, config('folder')))->with($this->share([
+            'status' => Helper::shareStatus($payment->status),
+            'data_branch' => $branch,
+        ]));
+
     }
 
     public function delivery()

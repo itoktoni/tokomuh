@@ -4,17 +4,15 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Modules\Finance\Dao\Models\Payment;
-use Modules\Sales\Emails\CreateOrderEmail;
-use Modules\Sales\Emails\TestingOrderEmail;
-use Modules\Sales\Emails\CreateLanggananEmail;
-use Modules\Finance\Emails\ApprovePaymentEmail;
-use Modules\Sales\Dao\Repositories\OrderRepository;
-use Modules\Finance\Emails\ConfirmationPaymentEmail;
 use Modules\Finance\Dao\Repositories\PaymentRepository;
-use Modules\Sales\Dao\Repositories\SubscribeRepository;
-use Modules\Procurement\Dao\Repositories\PurchasePrepareRepository;
-use Modules\Procurement\Emails\CreateOrderEmail as EmailsCreateOrderEmail;
+use Modules\Finance\Emails\ApprovePaymentEmail;
+use Modules\Finance\Emails\ConfirmationPaymentEmail;
+use Modules\Finance\Emails\OrderWaybillEmail;
+use Modules\Sales\Dao\Facades\OrderFacades;
+use Modules\Sales\Dao\Facades\OrderGroupFacades;
+use Modules\Sales\Emails\ApproveOrderEmail;
+use Modules\Sales\Emails\CreateGroupEmail;
+use Modules\Sales\Emails\CreateOrderEmail;
 
 class SendEmail extends Command
 {
@@ -50,66 +48,73 @@ class SendEmail extends Command
      */
     public function handle()
     {
-        $order = new OrderRepository();
-        $order_data = $order->dataRepository()->whereNull('sales_order_date_quotation')->limit(2)->get();
+        $order_data = OrderGroupFacades::where('sales_group_status', 1)->whereNull('sales_group_date_email_created_order')->whereNotNull('finance_payment_email')->whereNotNull('sales_group_customer_email')->limit(1)->get();
         if ($order_data) {
 
             foreach ($order_data as $order_item) {
 
-                $data = $order->showRepository($order_item->sales_order_id, ['detail', 'company']);
-                Mail::to([config('website.email')])->send(new CreateOrderEmail($data));
-                $data->sales_order_date_quotation = date('Y-m-d H:i:s');
-                $data->save();
-            }
-        }
-        
-        $langganan = new SubscribeRepository();
-        $langganan_data = $langganan->dataRepository()->whereNull('sales_langganan_date_email')->limit(1)->get();
-        
-        if ($langganan_data) {
-            foreach ($langganan_data as $langganan_item) {
-                $data = $langganan->showRepository($langganan_item->sales_langganan_id);
-                Mail::to([config('website.email')])->send(new CreateLanggananEmail($data));
-                $data->sales_langganan_date_email = date('Y-m-d H:i:s');
-                $data->save();
+                Mail::to([config('website.email')])->send(new CreateGroupEmail($order_item));
+                $order_item->sales_group_customer_email = date('Y-m-d H:i:s');
+                $order_item->save();
             }
         }
 
-        // $payment = new PaymentRepository();
-        // $payment_data = $payment->dataRepository()->whereNull('finance_payment_reference')->whereNull('finance_payment_email_date')->limit(1)->get();
-        // if ($payment_data) {
+        $payment = new PaymentRepository();
+        $payment_data = $payment->dataRepository()->whereNull('finance_payment_date_email_created')->limit(1)->get();
+        if ($payment_data) {
 
-        //     foreach ($payment_data as $payment_item) {
-        //         $data = $payment->showRepository($payment_item->finance_payment_id);
-        //         Mail::to([$payment_item->finance_payment_email, config('website.email')])->send(new ConfirmationPaymentEmail($data));
-        //         $data->finance_payment_email_date = date('Y-m-d H:i:s');
-        //         $data->save();
-        //     }
-        // }
+            foreach ($payment_data as $payment_item) {
+                $data = $payment->showRepository($payment_item->finance_payment_id);
+                Mail::to([$payment_item->finance_payment_email, config('website.email')])->send(new ConfirmationPaymentEmail($data));
+                $data->finance_payment_date_email_created = date('Y-m-d H:i:s');
+                $data->save();
+            }
+        }
 
-        // $payment_approve = $payment->dataRepository()->whereNull('finance_payment_reference')->whereNull('finance_payment_email_approve_date')->whereNotNull('finance_payment_approved_at')->limit(1)->get();
-        // if ($payment_approve) {
+        $payment_approve = $payment->dataRepository()->whereNull('finance_payment_date_email_approved')->whereNotNull('finance_payment_email')->whereNotNull('finance_payment_approved_at')->limit(1)->get();
+        if ($payment_approve) {
 
-        //     foreach ($payment_approve as $payment_aprove) {
-        //         $data = $payment->showRepository($payment_aprove->finance_payment_id);
-        //         Mail::to([$payment_item->finance_payment_email, config('website.email')])->send(new ApprovePaymentEmail($data));
-        //         $data->finance_payment_email_approve_date = date('Y-m-d H:i:s');
-        //         $data->save();
-        //     }
-        // }
+            foreach ($payment_approve as $payment_approve) {
+                $data = $payment->showRepository($payment_approve->finance_payment_id);
+                Mail::to([$data->finance_payment_email, config('website.email')])->send(new ApprovePaymentEmail($data));
+                $data->finance_payment_date_email_approved = date('Y-m-d H:i:s');
+                $data->save();
+            }
+        }
 
-        // $prepare_order = new PurchasePrepareRepository();
-        // $prepare_order_data = $prepare_order->dataRepository()->where('purchase_status', 3)->whereNull('purchase_sent_date')->limit(1)->get();
-        // if ($prepare_order_data) {
+        $order_data = OrderGroupFacades::where('sales_group_status', 3)->whereNull('sales_group_date_email_approved_order')->limit(1)->get();
+        if ($order_data) {
 
-        //     foreach ($prepare_order_data as $prepare_order_item) {
+            foreach ($order_data as $order_item) {
+                if ($order_item->sales_group_customer_email) {
 
-        //         $data = $prepare_order->showRepository($prepare_order_item->purchase_id, ['vendor','detail', 'detail.product']);
-        //         Mail::to([$data->vendor->procurement_vendor_email, config('website.warehouse')])->send(new EmailsCreateOrderEmail($data));
-        //         $data->purchase_sent_date = date('Y-m-d H:i:s');
-        //         $data->save();
-        //     }
-        // }
+                    Mail::to([config('website.email')])->send(new ApproveOrderEmail($order_item));
+                    $order_item->sales_group_date_email_approved_order = date('Y-m-d H:i:s');
+                    $order_item->save();
+                }
+
+                if ($order_item->order->count() > 0) {
+
+                    foreach ($order_item->order as $branch) {
+
+                        Mail::to([$branch->sales_order_from_email])->send(new CreateOrderEmail($branch));
+                        $branch->sales_order_date_email_approved_order = date('Y-m-d H:i:s');
+                        $branch->save();
+                    }
+                }
+
+            }
+        }
+
+       $tracking = OrderFacades::whereNotNull('sales_order_courier_waybill')->whereNotNull('sales_order_to_email')->whereNull('sales_order_date_email_track_order')->limit(1)->get();
+        if ($tracking) {
+
+            foreach ($tracking as $tracking) {
+                Mail::to([$tracking->sales_order_to_email, config('website.email')])->send(new OrderWaybillEmail($tracking));
+                $tracking->sales_order_date_email_track_order = date('Y-m-d H:i:s');
+                $tracking->save();
+            }
+        }
 
         $this->info('The system has been sent successfully!');
     }

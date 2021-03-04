@@ -43,7 +43,7 @@
 
                 @auth
                 <div class="product-action-vertical">
-                    @livewire('ecommerce.wishlist-livewire', ['product_id' => $new->item_product_id])
+                    @livewire('ecommerce.love-livewire', ['product_id' => $new->item_product_id])
                 </div>
                 @endauth
 

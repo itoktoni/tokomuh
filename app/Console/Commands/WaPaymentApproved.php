@@ -47,10 +47,10 @@ class WaPaymentApproved extends Command
         $payment_data = PaymentFacades::whereNull('finance_payment_date_wa_approved')->whereNotNull('finance_payment_approved_at')->limit(1)->get();
         if ($payment_data) {
             foreach ($payment_data as $payment_item) {
-                $message = "*NOTIFIKASI TERIMA PEMBAYARAN* \n \n";
+                $message = "*PEMBAYARAN TELAH DITERIMA* \n \n";
                 $message = $message. "No. Order : $payment_item->finance_payment_sales_order_id \n";
                 $message = $message. "Nama : $payment_item->finance_payment_person \n";
-                $message = $message. "Tgl Diterima Pembayaran : ".$payment_item->finance_payment_approved_at->format('d M Y')." \n";
+                $message = $message. "Tgl Terima Pembayaran : ".$payment_item->finance_payment_approved_at->format('d M Y')." \n";
                 $message = $message. "Jumlah Diterima: ". Helper::createRupiah($payment_item->finance_payment_approve_amount)." \n";
                 $message = $message. "Catatan admin : $payment_item->finance_payment_description \n";
                 

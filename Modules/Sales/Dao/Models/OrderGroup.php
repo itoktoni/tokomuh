@@ -2,18 +2,12 @@
 
 namespace Modules\Sales\Dao\Models;
 
-use Illuminate\Support\Str;
 use Modules\group\Dao\Models\Area;
 use Modules\group\Dao\Models\City;
 use Modules\Finance\Dao\Models\Tax;
-use Modules\Finance\Dao\Models\Top;
-use Illuminate\Support\Facades\Auth;
-use Modules\Crm\Dao\Models\Customer;
 use Modules\group\Dao\Models\Province;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Finance\Dao\Models\Payment;
-use Modules\Forwarder\Dao\Models\Vendor;
-use Modules\group\Dao\Models\OrderDetail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Sales\Dao\Models\Order;
 use Plugin\Helper;
@@ -33,6 +27,7 @@ class OrderGroup extends Model
         'sales_group_deleted_by',
         'sales_group_date_order',
         'sales_group_date_invoice',
+        'sales_group_customer_id',
         'sales_group_customer_name',
         'sales_group_customer_phone',
         'sales_group_customer_email',
@@ -58,8 +53,10 @@ class OrderGroup extends Model
         'sales_group_payment_value',
         'sales_group_payment_notes',
         'sales_group_core_user_id',
-        'sales_group_date_wa_approved_wa',
-        'sales_group_date_wa_created_wa',
+        'sales_group_date_wa_created_order',
+        'sales_group_date_wa_approved_order',
+        'sales_group_date_email_created_order',
+        'sales_group_date_email_approved_order',
     ];
 
     public $timestamps = true;
@@ -103,7 +100,7 @@ class OrderGroup extends Model
 
     public function detail()
     {
-        return $this->hasMany(OrderDetail::class, 'sales_group_detail_order_id', 'sales_group_id');
+        return $this->hasMany(OrderDetail::class, 'sales_order_detail_group_id', 'sales_group_id');
     }
 
     public function payment()

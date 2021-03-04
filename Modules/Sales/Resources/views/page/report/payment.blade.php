@@ -7,7 +7,7 @@
         {!! Form::open(['route' => $action_code, 'class' => 'form-horizontal', 'files' => true]) !!}
         <div class="panel panel-default">
             <header class="panel-heading">
-                <h2 class="panel-title">Report Production</h2>
+                <h2 class="panel-title">Report Payment</h2>
             </header>
 
             <div class="panel-body line">
@@ -39,17 +39,18 @@
 
                     <div class="form-group">
 
-                        {!! Form::label('name', 'Promo', ['class' => 'col-md-2 control-label']) !!}
-                        <div class="col-md-4 {{ $errors->has('promo') ? 'has-error' : ''}}">
-                            {{ Form::select('promo', $promo, old('promo') ?? null, ['class'=> 'form-control']) }}
-                            {!! $errors->first('promo', '<p class="help-block">:message</p>') !!}
+                        {!! Form::label('name', 'Branch', ['class' => 'col-md-2 control-label']) !!}
+                        <div class="col-md-4 {{ $errors->has('branch') ? 'has-error' : ''}}">
+                            {{ Form::select('branch', $data_branch, old('branch') ?? null, ['class'=> 'form-control']) }}
+                            {!! $errors->first('branch', '<p class="help-block">:message</p>') !!}
                         </div>
+
                         {!! Form::label('name', 'Status', ['class' => 'col-md-2 control-label']) !!}
                         <div class="col-md-4 {{ $errors->has('status') ? 'has-error' : ''}}">
                             {{ Form::select('status', $status, old('status') ?? null, ['class'=> 'form-control']) }}
                             {!! $errors->first('status', '<p class="help-block">:message</p>') !!}
                         </div>
-                       
+
                     </div>
 
                 </div>

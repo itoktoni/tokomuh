@@ -15,8 +15,7 @@
                 <div class="col-lg-10 col-sm-12" id="subsribe">
                     <div class="widget widget-newsletter form-wrapper form-wrapper-inline">
                         <div class="mx-auto mb-3">
-                            {!! config('website.promo') !!}
-
+                            {!! config('website.newsletter') !!}
                         </div>
 
                         @livewire('ecommerce.subscribe-livewire')

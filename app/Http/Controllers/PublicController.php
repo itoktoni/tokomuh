@@ -6,14 +6,15 @@ use App;
 use App\Dao\Facades\BranchFacades;
 use App\Dao\Repositories\BranchRepository;
 use App\Dao\Repositories\TeamRepository;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Darryldecode\Cart\CartCondition;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Exception;
-use Hamcrest\Type\IsNumeric;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -22,16 +23,14 @@ use Intervention\Image\Facades\Image;
 use Ixudra\Curl\Facades\Curl;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 use Modules\Finance\Dao\Facades\BankFacades;
+use Modules\Finance\Dao\Facades\PaymentFacades;
 use Modules\Finance\Dao\Repositories\BankRepository;
+use Modules\Item\Dao\Facades\CategoryFacades;
 use Modules\Item\Dao\Facades\ProductFacades;
 use Modules\Item\Dao\Facades\WishlistFacades;
 use Modules\Item\Dao\Models\Product;
-use Modules\Item\Dao\Repositories\BrandRepository;
 use Modules\Item\Dao\Repositories\CategoryRepository;
-use Modules\Item\Dao\Repositories\ColorRepository;
 use Modules\Item\Dao\Repositories\ProductRepository;
-use Modules\Item\Dao\Repositories\SizeRepository;
-use Modules\Item\Dao\Repositories\TagRepository;
 use Modules\Marketing\Dao\Facades\LanggananFacades;
 use Modules\Marketing\Dao\Repositories\ContactRepository;
 use Modules\Marketing\Dao\Repositories\HolidayRepository;
@@ -44,31 +43,30 @@ use Modules\Marketing\Emails\ContactEmail;
 use Modules\Rajaongkir\Dao\Repositories\DeliveryRepository;
 use Modules\Rajaongkir\Dao\Repositories\ProvinceRepository;
 use Modules\Sales\Dao\Facades\OrderFacades;
+use Modules\Sales\Dao\Facades\OrderGroupFacades;
 use Modules\Sales\Dao\Facades\SubscribeFacades;
 use Modules\Sales\Dao\Models\Area;
 use Modules\Sales\Dao\Models\City;
+use Modules\Sales\Dao\Models\Order;
+use Modules\Sales\Dao\Models\OrderTracking;
 use Modules\Sales\Dao\Models\Province;
 use Modules\Sales\Dao\Repositories\OrderRepository;
 use Modules\Sales\Dao\Repositories\SubscribeRepository;
 use Modules\Sales\Http\Services\LanggananService;
 use Modules\Sales\Http\Services\PublicService;
 use Plugin\Helper;
-use Artesaos\SEOTools\Facades\SEOTools;
-use Modules\Finance\Dao\Facades\PaymentFacades;
-use Modules\Item\Dao\Facades\CategoryFacades;
-use Modules\Sales\Dao\Facades\OrderGroupFacades;
 
 class PublicController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->only(['account','wishlist']);
+        $this->middleware('auth')->only(['account', 'wishlist']);
 
         SEOTools::setTitle(config('website.name'));
         SEOTools::setDescription(config('website.seo'));
         SEOTools::opengraph()->setUrl(url('/'));
         SEOTools::opengraph()->addProperty('type', 'articles');
-        SEOTools::jsonLd()->addImage(Helper::files('logo/'.config('website.logo')));
+        SEOTools::jsonLd()->addImage(Helper::files('logo/' . config('website.logo')));
     }
 
     private function share($data = [])
@@ -100,7 +98,7 @@ class PublicController extends Controller
         $new_product = ProductFacades::getNewProduct()->get();
         $data_wishlist = [];
 
-        if(auth()->check()){
+        if (auth()->check()) {
 
             $data_wishlist = WishlistFacades::getUserRepository();
         }
@@ -111,21 +109,21 @@ class PublicController extends Controller
             'sliders' => $slider,
             'best_sellers' => $best_sellers,
             'new_product' => $new_product,
-            'data_wishlist' => $data_wishlist
+            'data_wishlist' => $data_wishlist,
         ]));
     }
 
-    public function subscribe(Request $request){
-        if(request()->isMethod('POST')){
+    public function subscribe(Request $request)
+    {
+        if (request()->isMethod('POST')) {
 
             $validator = Validator::make($request->all(), [
                 'phone' => 'required|min:8|max:13',
             ]);
-    
+
             if ($validator->fails()) {
                 return redirect('/')->withErrors($validator)->withInput();
-            }
-            else{
+            } else {
                 session()->flash('success', 'Phone has been saved !');
             }
         }
@@ -158,21 +156,21 @@ class PublicController extends Controller
 
     public function shop($type = null, $slug = null)
     {
-        SEOTools::setTitle('Belanja murah di '.config('website.name'));
+        SEOTools::setTitle('Belanja murah di ' . config('website.name'));
         SEOTools::setDescription(config('website.seo'));
         SEOTools::opengraph()->setUrl(route('shop'));
         SEOTools::opengraph()->addProperty('type', 'articles');
-        SEOTools::jsonLd()->addImage(Helper::files('logo/'.config('website.logo')));
+        SEOTools::jsonLd()->addImage(Helper::files('logo/' . config('website.logo')));
 
-        if(request()->has('murah')){
+        if (request()->has('murah')) {
             $category = CategoryFacades::where('item_category_slug', request()->get('murah'))->first();
-            if($category){
+            if ($category) {
 
-                SEOTools::setTitle('Belanja '.$category->item_category_name);
+                SEOTools::setTitle('Belanja ' . $category->item_category_name);
                 SEOTools::setDescription($category->item_category_description);
                 SEOTools::opengraph()->setUrl(route('category', ['slug' => $category->item_category_slug]));
                 SEOTools::opengraph()->addProperty('type', 'articles');
-                SEOTools::jsonLd()->addImage(Helper::files('category/'.$category->item_category_image));
+                SEOTools::jsonLd()->addImage(Helper::files('category/' . $category->item_category_image));
             }
         }
 
@@ -187,6 +185,16 @@ class PublicController extends Controller
 
     public function track($code)
     {
+        $waybill = Cache::get('waybill');
+        $check_tracking = OrderTracking::where('order_tracking_order_id', 'SO2021020001')->orderByDesc('order_tracking_date')->first();
+
+        $collect = collect($waybill->rajaongkir->result->manifest)->sortDesc()->first();
+        dd($collect);
+        if ($collect->manifest_date != $check_tracking->order_tracking_date) {
+            dd(false);
+        }
+
+        dd(true);
         $model = new OrderRepository();
         $data = $model->showRepository($code);
         if ($data) {
@@ -282,16 +290,15 @@ class PublicController extends Controller
 
     public function wishlist()
     {
+        // if(request()->has('remove') && is_numeric(request()->get('remove'))){
 
-        if(request()->has('remove') && is_numeric(request()->get('remove'))){
-            
-            $wist = WishlistFacades::find(request()->get('remove'))->delete();
-            return redirect()->route('wishlist');
-        }
-        
-        $data = WishlistFacades::dataUserRepository()->paginate(config('website.pagination'));
-        return View(Helper::setViewFrontend(__FUNCTION__), [
-            'data_wishlist' => $data,
+        //     $wist = WishlistFacades::find(request()->get('remove'))->delete();
+        //     return redirect()->route('wishlist');
+        // }
+
+        // $data = WishlistFacades::dataUserRepository()->paginate(config('website.pagination'));
+        return View(Helper::setViewFrontend(__FUNCTION__))->with([
+            'gpage' => Helper::createOption(new PageRepository(), false, true),
         ]);
     }
 
@@ -896,7 +903,7 @@ class PublicController extends Controller
                         'finance_payment_amount' => $request['payment_value'],
                         'finance_payment_sales_order_id' => $request['code'],
                         'finance_payment_person' => $request['payment_person'],
-                        'finance_payment_phone' =>  $request['payment_phone'],
+                        'finance_payment_phone' => $request['payment_phone'],
                         'finance_payment_email' => $request['payment_email'],
                         'finance_payment_date' => $request['payment_date'],
                         'files' => request()->get('files'),
@@ -1013,26 +1020,27 @@ class PublicController extends Controller
         return View('frontend.' . config('website.frontend') . '.pages.konfirmasi');
     }
 
-    public function oproduct($slug = false){
+    public function oproduct($slug = false)
+    {
 
         $product = ProductFacades::slugRepository($slug);
         $id_product = $product->item_product_id;
         $images = ProductFacades::getImageDetail($id_product);
-        
-        if(auth()->check()){
+
+        if (auth()->check()) {
             $love = WishlistFacades::isLoveProduct($id_product) ? true : false;
         }
 
-        SEOTools::setTitle('Jual '.$product->item_product_name);
+        SEOTools::setTitle('Jual ' . $product->item_product_name);
         SEOTools::setDescription($product->item_product_seo);
         SEOTools::opengraph()->setUrl(route('product', ['slug' => $product->item_product_slug]));
         SEOTools::opengraph()->addProperty('type', 'articles');
-        SEOTools::jsonLd()->addImage(Helper::files('product/'.$product->item_product_image));
+        SEOTools::jsonLd()->addImage(Helper::files('product/' . $product->item_product_image));
 
         return View(Helper::setViewFrontend(__FUNCTION__))->with($this->share([
-           'slug' => $slug,
-           'oproduct' => $product,
-           'images' => $images,
+            'slug' => $slug,
+            'oproduct' => $product,
+            'images' => $images,
         ]));
     }
 
@@ -1094,11 +1102,11 @@ class PublicController extends Controller
         // $product->save();
         $product_image = $data_product->getImageDetail($product->item_product_id) ?? [];
         $variants = $data_product->variant($product->item_product_id) ?? [];
-        SEOTools::setTitle($product->item_product_name.' by '.$product->branch_name);
+        SEOTools::setTitle($product->item_product_name . ' by ' . $product->branch_name);
         SEOTools::setDescription($product->item_product_page_seo);
         SEOTools::opengraph()->setUrl(route('product', ['slug' => $product->item_product_slug]));
         SEOTools::opengraph()->addProperty('type', 'articles');
-        SEOTools::jsonLd()->addImage(Helper::files('product/'.$product->item_product_image));
+        SEOTools::jsonLd()->addImage(Helper::files('product/' . $product->item_product_image));
 
         return View(Helper::setViewFrontend(__FUNCTION__))->with($this->share([
             'oproduct' => $product,

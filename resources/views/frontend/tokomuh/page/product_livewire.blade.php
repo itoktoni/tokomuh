@@ -85,11 +85,11 @@
     </div>
     @endif
 
-    <div class="product-form" style="width: 70%">
+    <div class="product-form" style="width: 82.2%">
         <label class="text-center">Chat:</label>
         <a target="_blank" class="btn-product btn-wa"
             href="https://api.whatsapp.com/send?phone={{ Helper::convertPhone(config('website.phone')) }}&text=Saya%20tertarik%20untuk%20membeli%20produk%20{{ str_replace(' ','%20', $data->item_product_name) }}%20segera.">
-            <i class="fab fa-lg fa-whatsapp mr-2"></i>Buy from WA
+            <i class="fab fa-lg fa-whatsapp mr-2"></i>Tanya Product
         </a>
     </div>
 
@@ -109,7 +109,14 @@
                 <button wire:click="actionPlus" class="d-icon-plus"></button>
             </div>
             <button wire:click="actionCart" class="btn-product btn-cart">
-                <i class="d-icon-bag"></i>{{ $price > 0 ? 'Add To Cart' : 'Out of stock' }}
+                <i class="d-icon-bag"></i>
+                @if($stock_enable && $stock_qty < 5)
+                Grab it fast
+                @elseif($price > 0)
+                Add to cart
+                @else
+                Out of stock
+                @endif
             </button>
         </div>
 

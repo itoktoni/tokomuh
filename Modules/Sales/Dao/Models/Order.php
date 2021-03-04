@@ -38,6 +38,8 @@ class Order extends Model
         'sales_order_date_wa_delivered_wa',
         'sales_order_date_wa_processed_wa',
         'sales_order_date_wa_approved_wa',
+        'sales_order_date_email_approved_order',
+        'sales_order_date_email_track_order',
         'sales_order_from_id',
         'sales_order_from_name',
         'sales_order_from_phone',
@@ -72,7 +74,10 @@ class Order extends Model
         'sales_order_payment_notes',
         'sales_order_core_user_id',
         'sales_order_courier_code',
+        'sales_order_courier_name',
         'sales_order_courier_service',
+        'sales_order_courier_waybill',
+        'sales_order_courier_date',
     ];
 
     public $timestamps = true;
@@ -81,7 +86,7 @@ class Order extends Model
         'sales_order_to_phone' => 'required',
     ];
 
-    // public $with = ['detail', 'detail.product'];
+    public $with = ['detail', 'detail.product'];
 
     const CREATED_AT = 'sales_order_created_at';
     const UPDATED_AT = 'sales_order_updated_at';
@@ -94,6 +99,11 @@ class Order extends Model
         'sales_order_date_order' => [true => 'Tgl Order'],
         'crm_customer_name' => [false => 'Customer'],
         'sales_order_from_name' => [true => 'Branch'],
+        'sales_order_sum_total' => [false => 'Branch'],
+        'sales_order_sum_ongkir' => [false => 'Branch'],
+        'sales_order_sum_product' => [false => 'Branch'],
+        'sales_order_courier_waybill' => [false => 'Customer'],
+        'sales_order_courier_date' => [false => 'Customer'],
         'sales_order_to_name' => [true => 'Customer'],
         'sales_order_to_phone' => [true => 'Phone'],
         'sales_order_status' => [true => 'Status'],
@@ -114,7 +124,8 @@ class Order extends Model
         '2' => ['CONFIRM', 'primary'],
         '3' => ['PAID', 'success'],
         '4' => ['PROCESSED', 'dark'],
-        '5' => ['COMPLETED', 'info'],
+        '5' => ['DELIVERED', 'info'],
+        '6' => ['COMPLETED', 'default'],
         '0' => ['CANCEL', 'danger'],
     ];
 
@@ -126,6 +137,11 @@ class Order extends Model
     public function detail()
     {
         return $this->hasMany(OrderDetail::class, 'sales_order_detail_order_id', 'sales_order_id');
+    }
+
+    public function track()
+    {
+        return $this->hasMany(OrderTracking::class, 'order_tracking_order_id', 'sales_order_id');
     }
 
     public function delivery()

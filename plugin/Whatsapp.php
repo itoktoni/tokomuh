@@ -15,6 +15,8 @@ class Whatsapp
             'text' => $message,
         ];
 
+        // dd($data);
+
         curl_setopt(
             $curl,
             CURLOPT_HTTPHEADER,

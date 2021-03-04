@@ -50,7 +50,6 @@ class ReportSummaryOrderRepository extends Order implements FromCollection, With
 
     public function collection()
     {
-
         $query = $this->model
             ->select([
                 'sales_order_id',
@@ -62,14 +61,23 @@ class ReportSummaryOrderRepository extends Order implements FromCollection, With
                 'sales_order_sum_product',
                 'sales_order_discount_name',
                 'sales_order_discount_value',
-                'sales_order_delivery_name',
+                'sales_order_sum_discount',
+                'sales_order_sum_weight',
+                'sales_order_courier_code',
+                'sales_order_courier_name',
+                'sales_order_courier_waybill',
                 'sales_order_sum_ongkir',
                 'sales_order_sum_total',
-                'sales_order_notes_external',
             ]);
         
         if ($promo = request()->get('promo')) {
             $query->where('sales_order_marketing_promo_code', $promo);
+        }
+        if ($courier = request()->get('courier')) {
+            $query->where('sales_order_courier_code', $courier);
+        }
+        if ($branch = request()->get('branch')) {
+            $query->where('sales_order_from_id', $branch);
         }
         if ($status = request()->get('status')) {
             $query->where('sales_order_status', $status);
@@ -94,11 +102,13 @@ class ReportSummaryOrderRepository extends Order implements FromCollection, With
            $data->status[$data->sales_order_status][0] ?? '', 
            $data->sales_order_sum_product, 
            $data->sales_order_discount_name, 
-           $data->sales_order_discount_value , 
-           $data->sales_order_delivery_name ,
-           $data->sales_order_sum_ongkir ,
+           $data->sales_order_discount_value, 
+           $data->sales_order_sum_weight, 
+           $data->sales_order_courier_code, 
+           $data->sales_order_courier_name, 
+           $data->sales_order_courier_waybill, 
+           $data->sales_order_sum_ongkir,
            $data->sales_order_sum_total, 
-           $data->sales_order_notes_external, 
         ];
     }
 

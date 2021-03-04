@@ -1,6 +1,6 @@
 <div class="container mb-2">
     <div class="row gutter-lg">
-    
+
         @if(!Cart::isEmpty())
         <div class="col-lg-8 col-md-8">
             <table class="shop-table cart-table mt-2">
@@ -41,7 +41,7 @@
                         <tr>
                             <th><span>Product</span></th>
                             <th class="text-center"><span>Price</span></th>
-                            <th class="text-center"><span class="mr-3">quantity</span></th>
+                            <th class="text-center"><span class="mr-3">Qty </span></th>
                             <th>Subtotal</th>
                         </tr>
                     </thead>
@@ -103,12 +103,15 @@
                             <span class="amount ml-3">{{ Helper::createRupiah($cart->price) }}</span>
                         </td>
                         <td class="product-quantity text-center">
-                            <div class="input-group">
+                            <div class="input-group {{ $data_error == $cart->id ? 'error' : '' }}">
                                 <button wire:click="actionMinus('{{ $cart->id }}')" class="d-icon-minus"></button>
                                 <input class="form-control" wire:change="setQty('{{ $cart->id }}', $event.target.value)"
                                     value="{{ $cart->quantity }}" type="number">
                                 <button wire:click="actionPlus('{{ $cart->id }}')" class="d-icon-plus"></button>
                             </div>
+                            @if($data_error == $cart->id)
+                            <span>stock kurang</span>
+                            @endif
                         </td>
                         <td class="product-price">
                             <span class="amount">{{ number_format($cart->total) }}</span>
@@ -187,8 +190,18 @@
                                 @else
                                 <button wire:click="updateCoupon" class="btn btn-dark">Apply</button>
                                 @endif
+
+
+                            </td>
+
+                        </tr>
+                        @if($errors->has($coupon))
+                        <tr>
+                            <td class="text-left">
+                                Coupon not exists !
                             </td>
                         </tr>
+                        @endif
                     </table>
 
                     <hr>
@@ -218,8 +231,7 @@
                         </tr>
                     </table>
                     @if(session('area'))
-                    <a href="{{ route('checkout') }}"
-                        class="btn btn-dark btn-checkout mb-5">Proceed to checkout</a>
+                    <a href="{{ route('checkout') }}" class="btn btn-dark btn-checkout mb-5">Proceed to checkout</a>
                     @else
                     <a class="btn btn-dark btn-checkout mb-5">Please Complete Cart</a>
                     @endif

@@ -1,17 +1,15 @@
 <?php
 
-namespace Modules\Sales\Emails;
+namespace Modules\Finance\Emails;
 
 use Plugin\Helper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Modules\Sales\Models\Order;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Modules\Finance\Dao\Facades\BankFacades;
 use Modules\Finance\Dao\Repositories\BankRepository;
 
-class CreateOrderEmail extends Mailable
+class OrderWaybillEmail extends Mailable
 {
     use SerializesModels;
 
@@ -21,15 +19,11 @@ class CreateOrderEmail extends Mailable
      * @return void
      */
 
-    public $master;
-    public $order;
-    public $detail;
-    public $account;
+    public $data;
 
     public function __construct($order)
     {
-        $this->master = $order;
-        $this->detail = $order->detail;
+        $this->data = $order;
     }
 
     /**
@@ -39,6 +33,6 @@ class CreateOrderEmail extends Mailable
      */
     public function build()
     {
-        return $this->view(Helper::setViewEmail('create_order_email', 'sales'));
+        return $this->view(Helper::setViewEmail('order_waybill_email', 'finance'));
     }
 }

@@ -11,7 +11,10 @@ class ProductDetail extends Model
     protected $fillable = [
         'item_detail_id',
         'item_detail_name',
+        'item_detail_stock_enable',
+        'item_detail_stock_qty',
         'item_detail_price',
+        'item_detail_product_id',
         'item_detail_product_id',
         'item_detail_product_name',
         'item_detail_product_image',

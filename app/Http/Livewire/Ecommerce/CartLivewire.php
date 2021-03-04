@@ -4,9 +4,7 @@ namespace App\Http\Livewire\Ecommerce;
 
 use Darryldecode\Cart\CartCondition;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
-use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Modules\Marketing\Dao\Facades\PromoFacades;
@@ -14,7 +12,6 @@ use Modules\Rajaongkir\Dao\Models\Area;
 use Modules\Rajaongkir\Dao\Models\City;
 use Modules\Rajaongkir\Dao\Models\Province;
 use Plugin\Helper;
-use Ixudra\Curl\Facades\Curl;
 
 class CartLivewire extends Component
 {
@@ -29,6 +26,7 @@ class CartLivewire extends Component
     public $data_area;
     public $data_courier;
     public $data_shipping;
+    public $data_error;
 
     public $name;
     public $address;
@@ -122,11 +120,52 @@ class CartLivewire extends Component
     public function updateQty($id, $sign, $qty = 1)
     {
         if (Cart::getContent()->contains('id', $id)) {
+
+            $data = Cart::get($id);
+            $attribute = $data->attributes;
+            
             if ($sign == 'set') {
-                $cart = Cart::get($id);
-                $formula = ['quantity' => $qty - $cart->quantity];
+
+                if ($attribute->stock_enable && $qty >= $attribute->stock_qty) {
+                    $this->data_error = $id;
+                } else {
+                    $this->data_error = null;
+                }
+
+                if ($this->data_error) {
+                    $qty = $attribute->stock_qty;
+                } 
+
+                $formula = array(
+                    'quantity' => array(
+                        'relative' => false,
+                        'value' => $qty,
+                    ));
+
             } else {
-                $formula = $sign ? array('quantity' => +$qty) : array('quantity' => -$qty);
+
+                $pengurangan = $qty;
+                if($sign == 'min'){
+                    $pengurangan = -1;
+                }
+
+                if ($attribute->stock_enable && $data->quantity + $pengurangan > $attribute->stock_qty) {
+                    $this->data_error = $id;
+                } else {
+                    $this->data_error = null;
+                }
+
+                if ($this->data_error) {
+                    
+                        $formula = $sign == 'add' ? array(
+                            'quantity' => array(
+                                'relative' => false,
+                                'value' => $attribute->stock_qty,
+                            )) : array('quantity' => -$qty);
+                }
+                else{
+                    $formula = $sign == 'add' ? array('quantity' => +$qty) : array('quantity' => -$qty);
+                }
             }
 
             Cart::update($id, $formula);
@@ -154,14 +193,14 @@ class CartLivewire extends Component
 
     public function actionPlus($id)
     {
-        $this->updateQty($id, 1);
+        $this->updateQty($id, 'add');
     }
 
     public function actionMinus($id)
     {
         $qty = Cart::getContent()->get($id)->quantity;
         if ($qty >= 2) {
-            $this->updateQty($id, 0);
+            $this->updateQty($id, 'min');
         }
     }
 
@@ -183,7 +222,7 @@ class CartLivewire extends Component
                 'coupon' => 'required|exists:marketing_promo,marketing_promo_code',
             ];
 
-            $this->validate($rules, ['exists' => 'Voucher Not Valid !']);
+            $check = $this->validate($rules, ['exists' => 'Voucher Not Valid !']);
             $this->updateTotal();
         }
     }

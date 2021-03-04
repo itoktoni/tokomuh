@@ -158,8 +158,19 @@
                                             <div class="col-md-4">
                                                 <input type="text" value="{{ config('website.email') }}" name="email"
                                                     class="form-control">
-                                                <input type="text" value="{{ config('website.warehouse') }}"
-                                                    name="warehouse" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label">Fee</label>
+                                            <div class="col-md-4">
+                                                <input type="text" value="{{ config('website.fee') }}" name="fee"
+                                                    class="form-control">
+                                            </div>
+                                            <label class="col-md-2 control-label">Alamat Email</label>
+                                            <div class="col-md-4">
+                                                <input type="text" value="{{ config('website.email') }}" name="email"
+                                                    class="form-control">
                                             </div>
                                         </div>
 

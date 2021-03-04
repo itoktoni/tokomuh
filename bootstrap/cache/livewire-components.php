@@ -1,4 +1,5 @@
 <?php return array (
+  'ecommerce.account-livewire' => 'App\\Http\\Livewire\\Ecommerce\\AccountLivewire',
   'ecommerce.bag-livewire' => 'App\\Http\\Livewire\\Ecommerce\\BagLivewire',
   'ecommerce.bestseller-livewire' => 'App\\Http\\Livewire\\Ecommerce\\BestsellerLivewire',
   'ecommerce.cart-livewire' => 'App\\Http\\Livewire\\Ecommerce\\CartLivewire',

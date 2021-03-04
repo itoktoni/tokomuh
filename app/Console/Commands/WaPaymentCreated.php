@@ -46,7 +46,7 @@ class WaPaymentCreated extends Command
         $payment_data = PaymentFacades::whereNull('finance_payment_approve_amount')->whereNull('finance_payment_date_wa_approved')->limit(1)->get();
         if ($payment_data) {
             foreach ($payment_data as $payment_item) {
-                $message = "*NOTIFIKASI KONFIRMASI PEMBAYARAN* \n \n";
+                $message = "*PEMBAYARAN TELAH DIKIRIM* \n \n";
                 $message = $message. "No. Order : $payment_item->finance_payment_sales_order_id \n";
                 $message = $message. "Nama : $payment_item->finance_payment_person \n";
                 $message = $message. "Tanggal Pembayaran : ".$payment_item->finance_payment_date->format('d M Y'). "\n";
@@ -54,7 +54,7 @@ class WaPaymentCreated extends Command
                 $message = $message. "Catatan : $payment_item->finance_payment_note \n";
                 
                 // Mail::to([$payment_item->finance_payment_email, config('website.email')])->send(new ConfirmationPaymentEmail($data));
-                $payment_item->finance_payment_wa_date = date('Y-m-d H:i:s');
+                $payment_item->finance_payment_date_wa_created = date('Y-m-d H:i:s');
                 $payment_item->save();
                 
                 Whatsapp::send(config('website.phone'), $message);

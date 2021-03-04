@@ -92,23 +92,14 @@ class OrderService extends MasterService
         if (!empty($request['detail'])) {
             foreach ($request['detail'] as $item) {
 
-                if (isset($item['variant'])) {
-                    foreach ($item['variant'] as $variant) {
-                        $data = $variant;
-                        unset($variant['sales_order_detail_variant_qty']);
-                        OrderDetailVariantFacades::updateOrInsert($variant, $data);
-                    }
-                }
-
-                unset($item['variant']);
                 $where = [
-                    'sales_order_detail_order_id' => $item['sales_order_detail_order_id'],
-                    OrderDetailFacades::getForeignKey() => $item[OrderDetailFacades::getForeignKey()],
+                    'sales_order_detail_id' => $item['sales_order_detail_id'],
                 ];
-                OrderDetailFacades::updateOrInsert($where, $item);
-
+                OrderDetailFacades::where($where)->update([
+                    'sales_order_detail_sent' => $item['sales_order_detail_sent'],
+                    'sales_order_detail_total' => $item['sales_order_detail_total'],
+                ]);
             }
-
         }
 
         if ($check['status']) {

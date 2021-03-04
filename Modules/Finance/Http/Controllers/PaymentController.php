@@ -2,20 +2,17 @@
 
 namespace Modules\Finance\Http\Controllers;
 
-use PDF;
-use Plugin\Alert;
-use Plugin\Helper;
-use Plugin\Response;
 use App\Http\Controllers\Controller;
-use App\Http\Services\MasterService;
 use App\Http\Requests\GeneralRequest;
-use Modules\Sales\Dao\Repositories\OrderRepository;
+use App\Http\Services\MasterService;
+use Modules\Finance\Dao\Repositories\AccountRepository;
 use Modules\Finance\Dao\Repositories\BankRepository;
 use Modules\Finance\Dao\Repositories\FlagRepository;
-use Modules\Finance\Dao\Repositories\AccountRepository;
 use Modules\Finance\Dao\Repositories\PaymentRepository;
-use Modules\Procurement\Dao\Repositories\PurchaseRepository;
 use Modules\Sales\Dao\Repositories\OrderGroupRepository;
+use PDF;
+use Plugin\Helper;
+use Plugin\Response;
 
 class PaymentController extends Controller
 {
@@ -29,7 +26,7 @@ class PaymentController extends Controller
             self::$model = new PaymentRepository();
         }
         $this->folder = 'finance';
-        $this->template  = Helper::getTemplate(__CLASS__);
+        $this->template = Helper::getTemplate(__CLASS__);
     }
 
     public function index()
@@ -62,7 +59,7 @@ class PaymentController extends Controller
         }
 
         return view(Helper::setViewCreate())->with($this->share([
-            'model' => self::$model
+            'model' => self::$model,
         ]));
     }
 
@@ -78,8 +75,8 @@ class PaymentController extends Controller
 
             $data = $service->show(self::$model);
             return view(Helper::setViewUpdate())->with($this->share([
-                'model'        => $data,
-                'key'          => self::$model->getKeyName()
+                'model' => $data,
+                'key' => self::$model->getKeyName(),
             ]));
         }
     }
@@ -87,7 +84,7 @@ class PaymentController extends Controller
     public function delete(MasterService $service)
     {
         $service->delete(self::$model);
-        return Response::redirectBack();;
+        return Response::redirectBack();
     }
 
     public function data(MasterService $service)
@@ -109,11 +106,16 @@ class PaymentController extends Controller
             $datatable->editColumn('finance_payment_status', function ($data) {
                 return Helper::createStatus($data->finance_payment_status, $data->status);
             });
+
+            $datatable->editColumn('finance_payment_in_out', function ($data) {
+                return Helper::createStatus($data->finance_payment_in_out, $data->in_out);
+            });
+            
             return $datatable->make(true);
         }
 
         return view(Helper::setViewData())->with([
-            'fields'   => Helper::listData(self::$model->datatable),
+            'fields' => Helper::listData(self::$model->datatable),
             'template' => $this->template,
         ]);
     }
@@ -124,8 +126,8 @@ class PaymentController extends Controller
             $data = $service->show(self::$model);
             return view(Helper::setViewShow())->with($this->share([
                 'fields' => Helper::listData(self::$model->datatable),
-                'model'   => $data,
-                'key'   => self::$model->getKeyName()
+                'model' => $data,
+                'key' => self::$model->getKeyName(),
             ]));
         }
     }

@@ -1,6 +1,5 @@
 @auth
-<a wire:click="actionWishlist('{{ $product_id }}')" class="size-guide">
-    <i class="fa fas fa-heart mr-2 button-love {{ $love ? 'love' : '' }}">
-    </i> Wishlist
-</a>
+<button class="btn-product-icon btn-cart {{ $love ? 'love' : '' }}" wire:click="actionWishlist('{{ $product_id }}')">
+    <i class="fa fas fa-heart"></i>
+</button>
 @endauth

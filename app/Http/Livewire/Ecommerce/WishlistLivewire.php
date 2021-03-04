@@ -5,57 +5,52 @@ namespace App\Http\Livewire\Ecommerce;
 use Livewire\Component;
 use Modules\Item\Dao\Facades\WishlistFacades;
 use Plugin\Helper;
+use Livewire\WithPagination;
 
 class WishlistLivewire extends Component
 {
+    use WithPagination;
+
     public $love = false;
     public $product_id;
+    public $search;
 
-    public function mount($product_id)
+    protected $paginationTheme = 'bootstrap';
+
+    public function updatingSearch()
     {
+        $this->resetPage();
+    }
 
-        $check = $this->checkWishlist($product_id);
-        if ($check) {
-            $this->love = true;
+    public function getWishlist(){
+        
+        $query = WishlistFacades::dataUserRepository();
+        
+        if (!empty($this->search)) {
+            $query->where('item_product_name', 'like', "%$this->search%");
         }
-        $this->product_id = $product_id;
+
+        return $this->data_wishlist = $query->paginate(10);
     }
 
     public function render()
     {
-        return View(Helper::setViewLivewire(__CLASS__));
-    }
-
-    public function checkWishlist($product_id)
-    {
-        $check = WishlistFacades::isLoveProduct($product_id);
-
-        if ($check) {
-            $this->love = true;
-            return $check;
+        $wishlist = [];
+        if (auth()->check()) {
+            $wishlist = $this->getWishlist();
         }
 
-        $this->love = false;
-        return false;
+        return View(Helper::setViewLivewire(__CLASS__))->with([
+            'data_wishlist' => $wishlist
+        ]);
     }
 
-    public function doAction($product_id)
+    public function removeWishlist($id)
     {
-        $check = $this->checkWishlist($product_id);
+        $check = WishlistFacades::isLoveProduct($id);
         if ($check) {
             $check->delete();
-            $this->love = false;
-        } else {
-            WishlistFacades::insert([
-                'item_wishlist_item_product_id' => $product_id,
-                'item_wishlist_user_id' => auth()->user()->id,
-            ]);
-            $this->love = true;
-        }
-    }
-
-    public function actionWishlist($product_id)
-    {
-        $this->doAction($product_id);
+            $this->getWishlist();
+        } 
     }
 }

@@ -54,6 +54,9 @@ class ProductLivewire extends Component
     public $data_size;
     public $data_branch;
 
+    public $stock_enable = false;
+    public $stock_qty = 0;
+
     public $notes;
     public $option = 'Please Select Option';
 
@@ -103,6 +106,7 @@ class ProductLivewire extends Component
             $this->price = $this->data->item_product_price ?? 0;
             $this->mask_price = $this->data->item_product_price ? Helper::createRupiah($this->data->item_product_price) : $this->option;
             $this->unic_id = $this->data->item_product_id ?? null;
+            $this->product_name = $this->data->item_product_name ?? null;
 
         } else {
             
@@ -128,9 +132,11 @@ class ProductLivewire extends Component
             $this->branch_province = $item->item_detail_branch_province_id ?? null;
             $this->branch_city = $item->item_detail_branch_city_id ?? null;
             $this->branch_area = $item->item_detail_branch_area_id ?? null;
+            $this->stock_enable = $item->item_detail_stock_enable ?? false;
+            $this->stock_qty = $item->item_detail_stock_qty ?? 0;
+            $this->product_name = !empty($item->item_detail_name) ? $this->data->item_product_name.' '.$item->item_detail_name : null;
         }
 
-        $this->product_name = $this->data->item_product_name ?? null;
         $this->product_image = $this->data->item_product_image ?? null;
         $this->product_slug = $this->data->item_product_slug ?? null;
         $this->product_weight = $this->data->item_product_weight ?? null;
@@ -175,11 +181,66 @@ class ProductLivewire extends Component
 
     public function updateQty($id, $sign, $qty = 1)
     {
+
         if (Cart::getContent()->contains('id', $id)) {
-            $formula = $sign ? array('quantity' => +$qty) : array('quantity' => -$qty);
+
+            $data = Cart::get($id);
+            $attribute = $data->attributes;
+            
+            if ($sign == 'set') {
+
+                if ($attribute->stock_enable && $qty >= $attribute->stock_qty) {
+                    $this->data_error = $id;
+                } else {
+                    $this->data_error = null;
+                }
+
+                if ($this->data_error) {
+                    $qty = $attribute->stock_qty;
+                } 
+
+                $formula = array(
+                    'quantity' => array(
+                        'relative' => false,
+                        'value' => $qty,
+                    ));
+
+            } else {
+
+                $pengurangan = $qty;
+                if($sign == 'min'){
+                    $pengurangan = -1;
+                }
+
+                if ($attribute->stock_enable && $data->quantity + $pengurangan > $attribute->stock_qty) {
+                    $this->data_error = $id;
+                } else {
+                    $this->data_error = null;
+                }
+
+                if ($this->data_error) {
+                    
+                        $formula = $sign == 'add' ? array(
+                            'quantity' => array(
+                                'relative' => false,
+                                'value' => $attribute->stock_qty,
+                            )) : array('quantity' => -$qty);
+                }
+                else{
+                    $formula = $sign == 'add' ? array('quantity' => +$qty) : array('quantity' => -$qty);
+                }
+            }
+
             Cart::update($id, $formula);
+            // $this->updateTotal();
             $this->emit('updateCart');
         }
+
+        // if (Cart::getContent()->contains('id', $id)) {
+        //     $formula = $sign ? array('quantity' => +$qty) : array('quantity' => -$qty);
+        //     Cart::update($id, $formula);
+        //     $this->emit('updateCart');
+        // }
     }
 
     public function actionPlus()
@@ -202,7 +263,6 @@ class ProductLivewire extends Component
     public function actionCart()
     {
         $rules = [
-            'qty' => 'required|integer|min:1',
             'product_id' => 'required',
             'price' => 'required|integer|min:1',
         ];
@@ -227,9 +287,27 @@ class ProductLivewire extends Component
                 'branch_id' => 'required|not_in:none',
             ]);
         }
+        if($this->stock_enable){
+            $data = Cart::get($this->unic_id);
+            $maximum = $this->stock_qty;
+            if($data){
+
+                $maximum = $this->stock_qty - $data->quantity;
+            }
+            $rules = array_merge($rules, [
+                'qty' => 'required|integer|min:1|max:'.($maximum),
+            ]);
+        }
+        else{
+            $rules = array_merge($rules, [
+                'qty' => 'required|integer|min:1',
+            ]);
+            
+        }
 
         $message = [
             'min' => $this->option,
+            'max' => 'Stock Kurang Dari '.$this->stock_qty,
             'required' => 'The :attribute field is required.',
         ];
 
@@ -252,6 +330,8 @@ class ProductLivewire extends Component
             'product_image' => $this->product_image,
             'product_slug' => $this->product_slug,
             'product_weight' => $this->product_weight,
+            'stock_enable' => $this->stock_enable,
+            'stock_qty' => $this->stock_qty,
             'notes' => $this->notes,
         ];
 

@@ -3,14 +3,12 @@
         <tr>
             <td>Sales ID</td>
             <td>Create Date</td>
-            <td>Delivery Date</td>
+            <td>Order Date</td>
             <td>Customer</td>
             <td>Email</td>
             <td>Phone</td>
             <td>Status</td>
             <td>Branch</td>
-            <td>Delivery</td>
-            <td>Delivery Notes</td>
             <td>Total Order</td>
             <td>Discount Name</td>
             <td>Discount</td>
@@ -24,6 +22,7 @@
             <td>Price Order</td>
             <td>Total Order</td>
             <td>Note</td>
+            <td>Fee</td>
         </tr>
     </thead>
     <tbody>
@@ -37,8 +36,6 @@
             <td>{{ $data->sales_order_to_phone }} </td>
             <td>{{ $data->status[$data->sales_order_status][0] ?? '' }} </td>
             <td>{{ $data->branch_name }} </td>
-            <td>{{ $data->rajaongkir_delivery_name }} </td>
-            <td>{{ $data->sales_order_delivery_name }} </td>
             <td>{{ $data->sales_order_sum_product }} </td>
             <td>{{ $data->sales_order_discount_name  }} </td>
             <td>{{ $data->sales_order_discount_value }} </td>
@@ -47,11 +44,12 @@
             <td>{{ $data->sales_order_delivery_name }} </td>
             <td>{{ $data->item_category_name }} </td>
             <td>{{ $data->item_product_id }} </td>
-            <td>{{ $data->item_product_name }} </td>
+            <td>{{ $data->sales_order_detail_item_product_description }} </td>
             <td>{{ $data->sales_order_detail_qty }} </td>
             <td>{{ $data->sales_order_detail_price }} </td>
             <td>{{ $data->sales_order_detail_total }} </td>
             <td>{{ $data->sales_order_detail_notes }} </td>
+            <td>{{ config('website.fee') * $data->sales_order_detail_qty }} </td>
             </tr>
             @endforeach
     </tbody>

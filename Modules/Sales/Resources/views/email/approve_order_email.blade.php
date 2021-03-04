@@ -20,7 +20,7 @@
                                                 <div style="margin:10px 2px -25px">
                                                     <p
                                                         style="font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:15px;font-weight:bold;margin:0;padding:0">
-                                                        Notification Order From System
+                                                        Notification Approve Order From System
                                                         {{ config('website.name') }},
                                                     </p>
 
@@ -38,7 +38,7 @@
                                                                     bgcolor="#{{ config('website.color') }}">
                                                                     <h2
                                                                         style="font-family:Arial,sans-serif;color:#ffffff;line-height:1.5;font-size:15px;font-weight:bold;margin:0;padding:5px 0">
-                                                                        No. Order : {{ $master->sales_order_id }}
+                                                                        No. Order : {{ $master->sales_group_id }}
                                                                     </h2>
                                                                 </th>
                                                             </tr>
@@ -54,7 +54,7 @@
                                                                     style="border-collapse:collapse;border-spacing:0;font-family:Arial,sans-serif;color:#555;line-height:1.5;border-bottom-color:#cccccc;border-bottom-width:1px;border-bottom-style:solid;margin:0;padding:5px 10px"
                                                                     bgcolor="#FFFFFF">
                                                                     <span
-                                                                        style="text-align: right;font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">{{ $master->sales_order_created_at->format('d M Y H:i:s') }}</span>
+                                                                        style="text-align: right;font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">{{ $master->sales_group_created_at->format('d M Y H:i:s') }}</span>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -71,7 +71,7 @@
 
                                                                     <span
                                                                         style="font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">
-                                                                        {{ $master->sales_order_to_name ?? '' }}
+                                                                        {{ $master->sales_group_customer_name ?? '' }}
                                                                     </span>
                                                                 </td>
                                                             </tr>
@@ -87,7 +87,7 @@
                                                                     bgcolor="#FFFFFF">
                                                                     <a
                                                                         style="text-align: right;color:#{{ config('website.color') }}!important;font-family:Arial,sans-serif;line-height:1.5;text-decoration:none;font-size:13px;margin:0;padding:0">
-                                                                        {{ $master->sales_order_to_email ?? '' }}
+                                                                        {{ $master->sales_group_customer_email ?? '' }}
                                                                     </a>
                                                                 </td>
                                                             </tr>
@@ -103,7 +103,7 @@
                                                                     bgcolor="#FFFFFF">
                                                                     <span
                                                                         style="text-align: right;font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">
-                                                                        {{ $master->sales_order_to_phone ?? '' }}
+                                                                        {{ $master->sales_group_customer_phone ?? '' }}
                                                                     </span>
                                                                 </td>
                                                             </tr>
@@ -120,9 +120,9 @@
                                                                     bgcolor="#FFFFFF">
                                                                     <span
                                                                         style="font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">
-                                                                        {{ $master->sales_order_to_address ?? '' }}
+                                                                        {{ $master->sales_group_customer_address ?? '' }}
                                                                         /
-                                                                        {{ Helper::getSingleArea($master->sales_order_to_area, true) ?? '' }}
+                                                                        {{ Helper::getSingleArea($master->sales_group_customer_area, true) ?? '' }}
                                                                     </span>
                                                                 </td>
                                                             </tr>
@@ -163,7 +163,33 @@
                                                                 </td>
                                                             </tr>
 
-                                                            @foreach($master->detail as $item)
+                                                            @foreach($order as $branch)
+                                                            <tr>
+                                                                <th colspan="4"
+                                                                    style="border-bottom-style:none;color:#ffffff;padding-left:10px;padding-right:10px"
+                                                                    bgcolor="#{{ config('website.colors') }}"></th>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <th colspan="1"
+                                                                    style="text-align: left;border-bottom-style:none;color:#ffffff;padding-left:10px;padding-right:10px"
+                                                                    bgcolor="#{{ config('website.color') }}">
+                                                                    <h2
+                                                                        style="font-family:Arial,sans-serif;color:#ffffff;line-height:1.5;font-size:13px;margin:0;padding:5px 0">
+                                                                        No. Order : {{ $branch->sales_order_id ?? '' }}
+                                                                    </h2>
+                                                                </th>
+                                                                <th colspan="3"
+                                                                    style="text-align: right;border-bottom-style:none;color:#ffffff;padding-left:10px;padding-right:10px"
+                                                                    bgcolor="#{{ config('website.color') }}">
+                                                                    <h2
+                                                                        style="text-align: right;font-family:Arial,sans-serif;color:#ffffff;line-height:1.5;font-size:13px;margin:0;padding:5px 0">
+                                                                        {{ $branch->sales_order_from_name ?? '' }}
+                                                                    </h2>
+                                                                </th>
+                                                            </tr>
+
+                                                            @foreach($branch->detail as $item)
                                                             <tr>
                                                                 <td align="left" valign="middle" width="50%"
                                                                     style="border-collapse:collapse;border-spacing:0;font-family:Arial,sans-serif;color:#555;line-height:1.5;border-bottom-color:#cccccc;border-bottom-width:1px;border-bottom-style:solid;margin:0;padding:5px 10px"
@@ -191,6 +217,40 @@
                                                                 </td>
                                                             </tr>
                                                             @endforeach
+                                                            <tr>
+                                                                <td align="left" colspan="1" valign="top"
+                                                                    style="border-collapse:collapse;border-spacing:0;font-family:Arial,sans-serif;color:#555;line-height:1.5;border-bottom-color:#cccccc;border-bottom-width:1px;border-bottom-style:solid;margin:0;padding:5px 10px"
+                                                                    bgcolor="#FFFFFF">
+                                                                    <span
+                                                                        style="font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">Ongkir
+                                                                        {{ $branch->sales_order_courier_name }}</span>
+                                                                </td>
+                                                                <td align="right" valign="top" colspan="3"
+                                                                    style="border-collapse:collapse;border-spacing:0;font-family:Arial,sans-serif;color:#555;line-height:1.5;border-bottom-color:#cccccc;border-bottom-width:1px;border-bottom-style:solid;margin:0;padding:5px 10px"
+                                                                    bgcolor="#FFFFFF">
+                                                                    <span
+                                                                        style="font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">
+                                                                        {{ Helper::createRupiah($branch->sales_order_sum_ongkir) ?? '' }}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="left" colspan="1" valign="top"
+                                                                    style="border-collapse:collapse;border-spacing:0;font-family:Arial,sans-serif;color:#555;line-height:1.5;border-bottom-color:#cccccc;border-bottom-width:1px;border-bottom-style:solid;margin:0;padding:5px 10px"
+                                                                    bgcolor="#FFFFFF">
+                                                                    <span
+                                                                        style="font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">Total</span>
+                                                                </td>
+                                                                <td align="right" valign="top" colspan="3"
+                                                                    style="border-collapse:collapse;border-spacing:0;font-family:Arial,sans-serif;color:#555;line-height:1.5;border-bottom-color:#cccccc;border-bottom-width:1px;border-bottom-style:solid;margin:0;padding:5px 10px"
+                                                                    bgcolor="#FFFFFF">
+                                                                    <span
+                                                                        style="font-family:Arial,sans-serif;color:#555;line-height:1.5;font-size:13px;margin:0;padding:0">
+                                                                        {{ Helper::createRupiah($branch->sales_order_sum_total) ?? '' }}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            @endforeach
 
                                                             <tr>
                                                                 <th colspan="4"
@@ -212,7 +272,27 @@
                                                                     bgcolor="#{{ config('website.color') }}">
                                                                     <h2
                                                                         style="text-align: right;font-family:Arial,sans-serif;color:#ffffff;line-height:1.5;font-size:13px;margin:0;padding:5px 0">
-                                                                        {{ Helper::createRupiah($master->sales_order_sum_product) ?? '' }}
+                                                                        {{ Helper::createRupiah($master->sales_group_sum_product) ?? '' }}
+                                                                    </h2>
+                                                                </th>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <th colspan="1"
+                                                                    style="text-align: left;border-bottom-style:none;color:#ffffff;padding-left:10px;padding-right:10px"
+                                                                    bgcolor="#{{ config('website.color') }}">
+                                                                    <h2
+                                                                        style="font-family:Arial,sans-serif;color:#ffffff;line-height:1.5;font-size:13px;margin:0;padding:5px 0">
+                                                                        Total Discount
+                                                                        {{ $master->sales_group_discount_name ?? '' }}
+                                                                    </h2>
+                                                                </th>
+                                                                <th colspan="3"
+                                                                    style="text-align: right;border-bottom-style:none;color:#ffffff;padding-left:10px;padding-right:10px"
+                                                                    bgcolor="#{{ config('website.color') }}">
+                                                                    <h2
+                                                                        style="text-align: right;font-family:Arial,sans-serif;color:#ffffff;line-height:1.5;font-size:13px;margin:0;padding:5px 0">
+                                                                        {{ Helper::createRupiah($master->sales_group_sum_discount) ?? '' }}
                                                                     </h2>
                                                                 </th>
                                                             </tr>
@@ -231,7 +311,7 @@
                                                                     bgcolor="#{{ config('website.color') }}">
                                                                     <h2
                                                                         style="text-align: right;font-family:Arial,sans-serif;color:#ffffff;line-height:1.5;font-size:13px;margin:0;padding:5px 0">
-                                                                        {{ Helper::createRupiah($master->sales_order_sum_ongkir) ?? '' }}
+                                                                        {{ Helper::createRupiah($master->sales_group_sum_ongkir) ?? '' }}
                                                                     </h2>
                                                                 </th>
                                                             </tr>
@@ -250,7 +330,7 @@
                                                                     bgcolor="#{{ config('website.color') }}">
                                                                     <h2
                                                                         style="text-align: right;font-family:Arial,sans-serif;color:#ffffff;line-height:1.5;font-size:13px;margin:0;padding:5px 0">
-                                                                        {{ Helper::createRupiah($master->sales_order_sum_total) ?? '' }}
+                                                                        {{ Helper::createRupiah($master->sales_group_sum_total) ?? '' }}
                                                                     </h2>
                                                                 </th>
                                                             </tr>
