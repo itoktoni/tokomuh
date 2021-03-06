@@ -55,6 +55,7 @@ class WaPaymentCreated extends Command
                 
                 // Mail::to([$payment_item->finance_payment_email, config('website.email')])->send(new ConfirmationPaymentEmail($data));
                 Whatsapp::send(config('website.phone'), $message);
+                Whatsapp::send($payment_item->finance_payment_email, $message);
                 
                 $payment_item->finance_payment_date_wa_created = date('Y-m-d H:i:s');
                 $payment_item->save();
