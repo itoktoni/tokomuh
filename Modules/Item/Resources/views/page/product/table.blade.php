@@ -6,6 +6,7 @@
             <th class="text-left col-md-1">Color</th>
             <th class="text-left col-md-1">Size</th>
             <th class="text-left col-md-2">Variant</th>
+            <th class="text-left col-md-1">Stock</th>
             <th class="text-right col-md-1">Price</th>
             <th class="text-center col-md-1">Action</th>
         </tr>
@@ -31,6 +32,9 @@
             </td>
             <td data-title="Price" class="text-right col-lg-1">
                 {{ Helper::createRupiah($item->item_detail_price) }}
+            </td>
+            <td data-title="Price" class="text-right col-lg-1">
+                {{ $item->item_detail_stock_qty }}
             </td>
             <td data-title="Action" class="text-right col-lg-1">
                 <a class="btn btn-success btn-xs" href="{{ route($module.'_variant', ['code' => $model->{$model->getKeyName()}, 'id' => $item->item_detail_id]) }}">Edit</a>
