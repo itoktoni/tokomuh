@@ -62,7 +62,11 @@ class ReportPaymentRepository extends Payment implements WithHeadings, ShouldAut
         if ($to = request()->get('to')) {
             $query->where('finance_payment_date', '<=', $to);
         }
-        dd($query->get());
+        
+        if ($in_out = request()->get('in_out')) {
+            $query->where('finance_payment_in_out', $in_out);
+        }
+        
         return $query->orderBy('finance_payment_date', 'ASC')->get();
     }
 

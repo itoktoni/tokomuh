@@ -51,7 +51,7 @@
             <td>{{ $data->sales_order_detail_price }} </td>
             <td>{{ $data->sales_order_detail_total }} </td>
             <td>{{ $data->sales_order_detail_notes }} </td>
-            <td>{{ config('website.fee') * $data->sales_order_detail_qty }} </td>
+            <td>{{ config('website.fee') * $data->sales_order_detail_sent }} </td>
             </tr>
             @endforeach
     </tbody>

@@ -46,9 +46,13 @@
                         </div>
 
                         {!! Form::label('name', 'Status', ['class' => 'col-md-2 control-label']) !!}
-                        <div class="col-md-4 {{ $errors->has('status') ? 'has-error' : ''}}">
+                        <div class="col-md-2 {{ $errors->has('status') ? 'has-error' : ''}}">
                             {{ Form::select('status', $status, old('status') ?? null, ['class'=> 'form-control']) }}
                             {!! $errors->first('status', '<p class="help-block">:message</p>') !!}
+                        </div>
+                        <div class="col-md-2 {{ $errors->has('in_out') ? 'has-error' : ''}}">
+                            {{ Form::select('in_out', ['0' => 'OUT', '1' => 'IN'], old('in_out') ?? null, ['class'=> 'form-control']) }}
+                            {!! $errors->first('in_out', '<p class="help-block">:message</p>') !!}
                         </div>
 
                     </div>
