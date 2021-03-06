@@ -46,7 +46,7 @@ class TrackingOrder extends Command
     public function handle()
     {
 
-        $list = OrderFacades::where('sales_order_status', 4)->whereNotNull('sales_order_courier_waybill')->where('sales_order_courier_date', '!=', date('Y-m-d'))->limit(1);
+        $list = OrderFacades::where('sales_order_status', 4)->whereNotNull('sales_order_courier_waybill')->whereNull('sales_order_courier_received_date')->where('sales_order_courier_date', '!=', date('Y-m-d'))->limit(1);
         foreach ($list->get() as $data) {
 
             if ($data) {
@@ -98,21 +98,26 @@ class TrackingOrder extends Command
                         $message = $message.'Last Update : '.$manifest->manifest_date.' '.$manifest->manifest_time.' \n';
 
                         Whatsapp::send($data->sales_order_to_phone, $message);
+
+                        $data->sales_order_courier_date = date('Y-m-d');
+                        $data->save();
+
                         if($data->sales_order_to_email){
 
                             Mail::to([$data->sales_order_to_email])->send(new OrderTrackingEmail($data, $manifest));
                         }
 
                         if ($waybill->rajaongkir->result->delivered) {
+
+                            $branch = '*HALO '.$data->sales_order_from_name.'* \n \n';
+                            Whatsapp::send($data->sales_order_from_phone, $branch.$message);
+
                             $dl = $waybill->rajaongkir->result->delivery_status;
                             $data->sales_order_courier_received_date = $dl->pod_date;
                             $data->sales_order_courier_received_by = $dl->pod_receiver;
                             $data->sales_order_status = 5;
                             $data->sales_order_courier_date = date('Y-m-d');
                             $data->save();
-
-                            $branch = '*HALO '.$data->sales_order_from_name.'* \n \n';
-                            Whatsapp::send($data->sales_order_from_phone, $branch.$message);
                         }
                     }
 

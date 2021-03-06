@@ -48,7 +48,7 @@ class SendEmail extends Command
      */
     public function handle()
     {
-        $order_data = OrderGroupFacades::where('sales_group_status', 1)->whereNull('sales_group_date_email_created_order')->whereNotNull('finance_payment_email')->whereNotNull('sales_group_customer_email')->limit(1)->get();
+        $order_data = OrderGroupFacades::where('sales_group_status', 2)->whereNull('sales_group_date_email_created_order')->whereNotNull('finance_payment_email')->whereNotNull('sales_group_customer_email')->limit(1)->get();
         if ($order_data) {
 
             foreach ($order_data as $order_item) {
@@ -60,7 +60,7 @@ class SendEmail extends Command
         }
 
         $payment = new PaymentRepository();
-        $payment_data = $payment->dataRepository()->whereNull('finance_payment_date_email_created')->limit(1)->get();
+        $payment_data = $payment->dataRepository()->whereNull('finance_payment_date_email_created')->limit(2)->get();
         if ($payment_data) {
 
             foreach ($payment_data as $payment_item) {
@@ -71,7 +71,7 @@ class SendEmail extends Command
             }
         }
 
-        $payment_approve = $payment->dataRepository()->whereNull('finance_payment_date_email_approved')->whereNotNull('finance_payment_email')->whereNotNull('finance_payment_approved_at')->limit(1)->get();
+        $payment_approve = $payment->dataRepository()->whereNull('finance_payment_date_email_approved')->whereNotNull('finance_payment_email')->whereNotNull('finance_payment_approved_at')->limit(2)->get();
         if ($payment_approve) {
 
             foreach ($payment_approve as $payment_approve) {
@@ -106,7 +106,7 @@ class SendEmail extends Command
             }
         }
 
-       $tracking = OrderFacades::whereNotNull('sales_order_courier_waybill')->whereNotNull('sales_order_to_email')->whereNull('sales_order_date_email_track_order')->limit(1)->get();
+       $tracking = OrderFacades::whereNotNull('sales_order_courier_waybill')->whereNotNull('sales_order_to_email')->whereNull('sales_order_date_email_track_order')->limit(2)->get();
         if ($tracking) {
 
             foreach ($tracking as $tracking) {

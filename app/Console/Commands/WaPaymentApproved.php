@@ -55,10 +55,11 @@ class WaPaymentApproved extends Command
                 $message = $message. "Catatan admin : $payment_item->finance_payment_description \n";
                 
                 // Mail::to([$payment_item->finance_payment_email, config('website.email')])->send(new ApprovePaymentEmail($payment_item));
+                Whatsapp::send($payment_item->finance_payment_phone, $message);
+                
                 $payment_item->finance_payment_date_wa_approved = date('Y-m-d H:i:s');
                 $payment_item->save();
                 
-                Whatsapp::send($payment_item->finance_payment_phone, $message);
             }
         }
 

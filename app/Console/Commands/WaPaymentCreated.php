@@ -43,10 +43,10 @@ class WaPaymentCreated extends Command
     public function handle()
     {
         $payment_data = $data = $message = null;
-        $payment_data = PaymentFacades::whereNull('finance_payment_approve_amount')->whereNull('finance_payment_date_wa_approved')->limit(1)->get();
+        $payment_data = PaymentFacades::whereNotNull('finance_payment_amount')->whereNull('finance_payment_date_wa_created')->limit(1)->get();
         if ($payment_data) {
             foreach ($payment_data as $payment_item) {
-                $message = "*PEMBAYARAN TELAH DIKIRIM* \n \n";
+                $message = "*PEMBAYARAN TELAH DIBUAT* \n \n";
                 $message = $message. "No. Order : $payment_item->finance_payment_sales_order_id \n";
                 $message = $message. "Nama : $payment_item->finance_payment_person \n";
                 $message = $message. "Tanggal Pembayaran : ".$payment_item->finance_payment_date->format('d M Y'). "\n";
