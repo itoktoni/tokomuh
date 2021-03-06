@@ -123,7 +123,7 @@ class Order extends Model
         '1' => ['CREATE', 'warning'],
         '2' => ['CONFIRM', 'primary'],
         '3' => ['PAID', 'success'],
-        '4' => ['PROCESSED', 'dark'],
+        '4' => ['PROCESSED', 'danger'],
         '5' => ['DELIVERED', 'info'],
         '6' => ['COMPLETED', 'default'],
         '0' => ['CANCEL', 'danger'],

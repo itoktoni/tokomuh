@@ -694,18 +694,13 @@
                         <h1>
                             {{ $item->product->item_product_name ?? '' }}
                         </h1>
-                        @foreach($item->variant->where('sales_order_detail_variant_qty','>', 0) as $variant)
-                        <p>
-                            - <strong>({{ $variant->sales_order_detail_variant_qty }})</strong>
-                            {{ $variant->variant->item_variant_name }}
-                        </p>
-                        @endforeach
+                       
                     </td>
                     <td class="price">
                         {{ Helper::createRupiah($item->sales_order_detail_price) ?? '' }}
                     </td>
                     <td class="qty">
-                        {{ $item->sales_order_detail_qty ?? '' }}
+                        {{ $item->sales_order_detail_sent ?? '' }}
                     </td>
                     <td class="total">
                         {{ Helper::createRupiah($item->sales_order_detail_total) ?? '' }}

@@ -147,7 +147,8 @@
                                                         Product
                                                     </span>
                                                 </th>
-                                                <th class="text-right"><span>Qty</span></th>
+                                                <th class="text-right"><span>Order</span></th>
+                                                <th class="text-right"><span>Receive</span></th>
                                                 <th class="text-right"><span>Price</span></th>
                                                 <th class="text-right">total</th>
                                             </tr>
@@ -165,6 +166,9 @@
                                                         class="mr-2 text-grey">{{ $detail->sales_order_detail_qty }}</span>
                                                 </th>
                                                 <th class="text-right"><span
+                                                        class="mr-2 text-grey">{{ $detail->sales_order_detail_sent }}</span>
+                                                </th>
+                                                <th class="text-right"><span
                                                         class="text-grey">{{ Helper::createRupiah($detail->sales_order_detail_price) }}</span>
                                                 </th>
                                                 <th class="text-right"><span
@@ -176,7 +180,7 @@
 
                                         <tfoot>
                                             <tr style="border-bottom: 0.5px solid whitesmoke;">
-                                                <th colspan="3">
+                                                <th colspan="4">
                                                     <span>
                                                         Total
                                                     </span>
@@ -186,7 +190,7 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <th class="text-left" colspan="3">
+                                                <th class="text-left" colspan="4">
                                                     <span>
                                                         Ongkir
                                                     </span>
@@ -196,7 +200,7 @@
                                                 </th>
                                             </tr>
                                             <tr style="border-top: 0.5px solid #999;">
-                                                <th colspan="3">
+                                                <th colspan="4">
                                                     <span>
                                                         Grand Total
                                                     </span>

@@ -19,6 +19,7 @@
             <td>Product ID</td>
             <td>Product Name</td>
             <td>Qty Order</td>
+            <td>Sent Order</td>
             <td>Price Order</td>
             <td>Total Order</td>
             <td>Note</td>
@@ -46,6 +47,7 @@
             <td>{{ $data->item_product_id }} </td>
             <td>{{ $data->sales_order_detail_item_product_description }} </td>
             <td>{{ $data->sales_order_detail_qty }} </td>
+            <td>{{ $data->sales_order_detail_sent }} </td>
             <td>{{ $data->sales_order_detail_price }} </td>
             <td>{{ $data->sales_order_detail_total }} </td>
             <td>{{ $data->sales_order_detail_notes }} </td>
