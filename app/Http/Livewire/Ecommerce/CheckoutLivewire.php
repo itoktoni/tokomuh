@@ -261,6 +261,11 @@ class CheckoutLivewire extends Component
                 $order['sales_order_date_order'] = date('Y-m-d H:i:s');
                 $order['sales_order_courier_date'] = date('Y-m-d');
                 $group['sales_order_notes_user'] = $this->notes;
+                
+                if(auth()->check()){
+                    
+                    $order['sales_order_core_user_id'] = auth()->user()->id;
+                }
 
                 $branch = BranchFacades::find($sales->branch_id);
                 $order['sales_order_from_id'] = $branch->branch_id;

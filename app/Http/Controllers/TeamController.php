@@ -45,6 +45,8 @@ class TeamController extends Controller
             'template' => $this->template,
             'status' => $status,
             'group' => $group,
+            'company' => $company,
+            'branch' => $branch,
         ];
 
         return array_merge($view, $data);

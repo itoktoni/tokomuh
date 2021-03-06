@@ -9,7 +9,6 @@ use App\Dao\Facades\CompanyFacades;
 use Modules\Sales\Dao\Models\Order;
 use App\Dao\Interfaces\MasterInterface;
 use Illuminate\Database\QueryException;
-use Modules\Sales\Dao\Models\OrderDetail;
 use Modules\Crm\Dao\Facades\CustomerFacades;
 use Modules\Item\Dao\Facades\ProductFacades;
 use Modules\Sales\Dao\Facades\DeliveryDetailFacades;

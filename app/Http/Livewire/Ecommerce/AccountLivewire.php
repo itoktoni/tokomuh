@@ -34,6 +34,10 @@ class AccountLivewire extends Component
             $query->Orwhere('sales_order_from_name', 'like', "%$this->search%");
         }
 
+        if(auth()->check()){
+            $query->where('sales_order_core_user_id', auth()->user()->id);
+        }
+
         return $query->paginate(3);
     }
 

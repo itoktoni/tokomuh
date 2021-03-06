@@ -35,27 +35,28 @@ class Branch extends Model
     public $searching = 'branch_name';
 
     public $datatable = [
-        'branch_name'           => [true    => 'Name'],
-        'branch_address'           => [false    => 'Name'],
-        'branch_email'           => [false    => 'Name'],
-        'branch_phone'           => [false    => 'Name'],
-        'branch_map'           => [false    => 'Name'],
-        'branch_rajaongkir_area_id'           => [true    => 'Name'],
-        'company_contact_name'           => [true    => 'Company'],
-        'rajaongkir_area_province_name'           => [true    => 'Province'],
-        'rajaongkir_area_city_name'           => [true    => 'City'],
-        'rajaongkir_area_name'           => [true    => 'Area'],
-        'rajaongkir_area_type'           => [false    => 'Type'],
-        'branch_description'     => [false    => 'Notes Area'],
+        'branch_name' => [true => 'Name'],
+        'branch_address' => [false => 'Address'],
+        'branch_email' => [false => 'Email'],
+        'branch_phone' => [false => 'Name'],
+        'branch_map' => [false => 'Name'],
+        'branch_company_id' => [false => 'Company'],
+        'branch_rajaongkir_area_id' => [false => 'Name'],
+        'company_contact_name' => [true => 'Company'],
+        'rajaongkir_area_province_name' => [true => 'Province'],
+        'rajaongkir_area_city_name' => [true => 'City'],
+        'rajaongkir_area_name' => [true => 'Area'],
+        'rajaongkir_area_type' => [false => 'Type'],
+        'branch_description' => [false => 'Notes Area'],
     ];
 
-    public $status    = [
+    public $status = [
         '1' => ['Show', 'info'],
         '0' => ['Hide', 'default'],
     ];
 
     public function area()
-	{
-		return $this->hasOne(Area::class, 'rajaongkir_area_id', 'branch_rajaongkir_area_id');
-	}
+    {
+        return $this->hasOne(Area::class, 'rajaongkir_area_id', 'branch_rajaongkir_area_id');
+    }
 }

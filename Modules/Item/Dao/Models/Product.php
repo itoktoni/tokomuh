@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Item\Dao\Facades\BrandFacades;
 use Modules\Item\Dao\Facades\CategoryFacades;
 use Plugin\Helper;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -122,6 +123,7 @@ class Product extends Model
         'item_product_page_content_3' => [false => 'Variant'],
         'item_product_is_variant' => [false => 'Variant'],
         'item_product_sku' => [false => 'Variant'],
+        'item_product_branch_id' => [false => 'Branch'],
     ];
 
     public $status = [
@@ -167,35 +169,37 @@ class Product extends Model
             // }
         });
 
-        // parent::saving(function ($model) {
+        parent::saving(function ($model) {
 
-        //     $file = 'item_product_file';
-        //     if (request()->has($file)) {
-        //         $image = $model->item_product_image;
-        //         if ($image) {
-        //             Helper::removeImage($image, Helper::getTemplate(__CLASS__));
-        //         }
+            $file = 'item_product_file';
+            if (request()->has($file)) {
+                $image = $model->item_product_image;
+                if ($image) {
+                    Helper::removeImage($image, Helper::getTemplate(__CLASS__));
+                }
 
-        //         $file = request()->file($file);
-        //         $name = Helper::uploadImage($file, Helper::getTemplate(__CLASS__), 400, 550);
-        //         $model->item_product_image = $name;
-        //     }
+                $file = request()->file($file);
+                $name = Helper::uploadImage($file, Helper::getTemplate(__CLASS__), 400, 550);
+                $model->item_product_image = $name;
+            }
 
-        //     if ($model->item_product_min_order <= 0) {
-        //         $model->item_product_min_order = 1;
-        //     }
+            if ($model->item_product_min_order <= 0) {
+                $model->item_product_min_order = 1;
+            }
 
-        //     if (request()->has('item_product_item_tag_json')) {
-        //         $model->item_product_item_tag_json = json_encode(request()->get('item_product_item_tag_json'));
-        //     }
+            if (request()->has('item_product_item_tag_json')) {
+                $model->item_product_item_tag_json = json_encode(request()->get('item_product_item_tag_json'));
+            }
 
-        //     if ($model->item_product_name && empty($model->item_product_slug)) {
-        //         $model->item_product_slug = Str::slug($model->item_product_name);
-        //     } else {
-        //         $model->item_product_slug = Str::slug($model->item_product_slug);
-        //     }
+            if ($model->item_product_name && empty($model->item_product_slug)) {
+                $model->item_product_slug = Str::slug($model->item_product_name.'-'.rand(10,1000));
+            } else {
+                $model->item_product_slug = Str::slug($model->item_product_slug.'-'.rand(10,1000));
+            }
 
-        // });
+            $model->item_product_branch_id = auth()->user()->branch;
+
+        });
 
         // parent::deleting(function ($model) {
         //     if (request()->has('id')) {
