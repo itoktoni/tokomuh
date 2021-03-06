@@ -54,10 +54,11 @@ class WaPaymentCreated extends Command
                 $message = $message. "Catatan : $payment_item->finance_payment_note \n";
                 
                 // Mail::to([$payment_item->finance_payment_email, config('website.email')])->send(new ConfirmationPaymentEmail($data));
+                Whatsapp::send(config('website.phone'), $message);
+                
                 $payment_item->finance_payment_date_wa_created = date('Y-m-d H:i:s');
                 $payment_item->save();
                 
-                Whatsapp::send(config('website.phone'), $message);
             }
         }
 
