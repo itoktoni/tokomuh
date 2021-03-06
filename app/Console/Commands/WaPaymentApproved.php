@@ -51,7 +51,7 @@ class WaPaymentApproved extends Command
                 $message = $message. "No. Order : $payment_item->finance_payment_sales_order_id \n";
                 $message = $message. "Nama : $payment_item->finance_payment_person \n";
                 $message = $message. "Tgl Terima Pembayaran : ".$payment_item->finance_payment_approved_at->format('d M Y')." \n";
-                $message = $message. "Jumlah Diterima: ". Helper::createRupiah($payment_item->finance_payment_approve_amount)." \n";
+                $message = $message. "Jumlah Diterima : ". Helper::createRupiah($payment_item->finance_payment_approve_amount)." \n";
                 $message = $message. "Catatan admin : $payment_item->finance_payment_description \n";
                 
                 // Mail::to([$payment_item->finance_payment_email, config('website.email')])->send(new ApprovePaymentEmail($payment_item));

@@ -79,11 +79,11 @@ class WaOrderApproved extends Command
 
                         $message = $message . '\nSub Total : ' . Helper::createRupiah($order_item->sales_order_sum_product);
                         $message = $message . '\nOngkir : ' . $order_item->sales_order_courier_name;
-                        $message = $message . '\nTotal: ' . Helper::createRupiah($order_item->sales_order_sum_total).' \n';
+                        $message = $message . '\nTotal : ' . Helper::createRupiah($order_item->sales_order_sum_total).' \n';
 
                         $branch = $branch . '\nSub Total : ' . Helper::createRupiah($order_item->sales_order_sum_product);
                         $branch = $branch . '\nOngkir : ' . $order_item->sales_order_courier_name;
-                        $branch = $branch . '\n*Total: ' . Helper::createRupiah($order_item->sales_order_sum_total).'*';
+                        $branch = $branch . '\n*Total : ' . Helper::createRupiah($order_item->sales_order_sum_total).'*';
 
                         $order_item->sales_order_date_wa_approved_wa = date('Y-m-d H:i:s');
                         $order_item->save();
@@ -99,7 +99,7 @@ class WaOrderApproved extends Command
                     $message = $message . 'PROMO : ' . $group_item->sales_group_discount_name . ' ( ' . Helper::createRupiah($group_item->sales_group_discount_value) . ' ) \n';
                 }
                 $message = $message . 'TOTAL ONGKIR : ' . Helper::createRupiah($group_item->sales_group_sum_ongkir) . '\n';
-                $message = $message . 'TOTAL ORDER: *' . Helper::createRupiah($group_item->sales_group_sum_total) . '*\n';
+                $message = $message . 'TOTAL ORDER : *' . Helper::createRupiah($group_item->sales_group_sum_total) . '*\n';
 
                 $message = $message . '\n' . config('website.promo') . '\n';
 
