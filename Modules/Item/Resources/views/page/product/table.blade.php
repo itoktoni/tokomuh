@@ -6,8 +6,8 @@
             <th class="text-left col-md-1">Color</th>
             <th class="text-left col-md-1">Size</th>
             <th class="text-left col-md-2">Variant</th>
-            <th class="text-left col-md-1">Stock</th>
             <th class="text-right col-md-1">Price</th>
+            <th class="text-left col-md-1">Stock</th>
             <th class="text-center col-md-1">Action</th>
         </tr>
     </thead>
