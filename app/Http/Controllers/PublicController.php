@@ -910,7 +910,7 @@ class PublicController extends Controller
                         'finance_payment_to' => $request['payment_bank_to'],
                         'finance_payment_from' => $request['payment_bank_from'],
                         'finance_payment_note' => $request['payment_notes'],
-                        'finance_payment_in' => 1,
+                        'finance_payment_in_out' => 1,
                         'finance_payment_status' => 0,
                         'finance_payment_created_by' => $request['payment_person'],
                     ];
