@@ -253,7 +253,7 @@ class CheckoutLivewire extends Component
 
             foreach (session('checkout') as $sales) {
 
-                $autonumber_order = Helper::autoNumber(OrderFacades::getTable(), OrderFacades::getKeyName(), 'SO' . date('Ym'), config('website.autonumber'));
+                $autonumber_order = Helper::autoNumber(OrderFacades::getTable(), OrderFacades::getKeyName(), config('website.prefix') . date('Ym'), config('website.autonumber'));
 
                 $order['sales_order_id'] = $autonumber_order;
                 $order['sales_order_group_id'] = $autonumber_group;
