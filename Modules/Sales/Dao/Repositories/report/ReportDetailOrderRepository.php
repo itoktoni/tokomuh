@@ -113,15 +113,15 @@ class ReportDetailOrderRepository extends Order implements FromView, ShouldAutoS
             $query->where('sales_order_date_order','<=', $to);
         }
 
-        $list_branch = Branch::where('branch_company_id', auth()->user()->company)->get()->pluck('branch_id');
-
+        
         if(auth()->user()->company){
-
+            
+            $list_branch = Branch::where('branch_company_id', auth()->user()->company)->get()->pluck('branch_id');
             $query->whereIn('sales_order_from_id', $list_branch);
         }
         else if(auth()->user()->branch){
-
-            $query->where('sales_order_from_id', $list_branch);
+            
+            $query->where('sales_order_from_id', auth()->user()->branch);
         }
 
         $query = $query->orderBy($this->model->getKeyName(), 'ASC');
