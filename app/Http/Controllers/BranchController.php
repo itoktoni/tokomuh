@@ -36,7 +36,11 @@ class BranchController extends Controller
     {
         $status = Helper::shareStatus(self::$model->status)->prepend('- Select Status -', '');
         $group = Helper::shareOption((new GroupUserRepository()));
-        $company = Helper::shareOption((new CompanyRepository()));
+        $company_data = Helper::shareOption((new CompanyRepository()),false,true);
+        if(auth()->user()->company){
+            $company_data->where('company_id', auth()->user()->company);
+        }
+        $company = $company_data->pluck('company_contact_name', 'company_contact_id');
 
         $area = ['Please Choose Area'];
         $view = [
