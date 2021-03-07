@@ -188,6 +188,8 @@ class HomeController extends Controller
                 'owner' => request()->get('owner'),
                 'phone' => request()->get('phone'),
                 'live' => request()->get('live'),
+                'fee' => request()->get('fee'),
+                'prefix' => request()->get('prefix'),
                 'name' => request()->get('name'),
                 'email' => request()->get('email'),
                 'cache' => request()->get('website_cache'),

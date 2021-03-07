@@ -167,9 +167,9 @@
                                                 <input type="text" value="{{ config('website.fee') }}" name="fee"
                                                     class="form-control">
                                             </div>
-                                            <label class="col-md-2 control-label">Alamat Email</label>
+                                            <label class="col-md-2 control-label">No SO</label>
                                             <div class="col-md-4">
-                                                <input type="text" value="{{ config('website.email') }}" name="email"
+                                                <input type="text" value="{{ config('website.prefix') }}" name="prefix"
                                                     class="form-control">
                                             </div>
                                         </div>
