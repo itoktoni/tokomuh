@@ -48,7 +48,7 @@ class SendEmail extends Command
      */
     public function handle()
     {
-        $order_data = OrderGroupFacades::where('sales_group_status', 2)->whereNull('sales_group_date_email_created_order')->whereNotNull('finance_payment_email')->whereNotNull('sales_group_customer_email')->limit(1)->get();
+        $order_data = OrderGroupFacades::where('sales_group_status', 2)->whereNull('sales_group_date_email_created_order')->whereNotNull('sales_group_customer_email')->limit(1)->get();
         if ($order_data) {
 
             foreach ($order_data as $order_item) {
@@ -110,9 +110,12 @@ class SendEmail extends Command
         if ($tracking) {
 
             foreach ($tracking as $tracking) {
-                Mail::to([$tracking->sales_order_to_email, config('website.email')])->send(new OrderWaybillEmail($tracking));
-                $tracking->sales_order_date_email_track_order = date('Y-m-d H:i:s');
-                $tracking->save();
+                if(!empty($tracking->sales_order_courier_waybill)){
+
+                    Mail::to([$tracking->sales_order_to_email, config('website.email')])->send(new OrderWaybillEmail($tracking));
+                    $tracking->sales_order_date_email_track_order = date('Y-m-d H:i:s');
+                    $tracking->save();
+                }
             }
         }
 

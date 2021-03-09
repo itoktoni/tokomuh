@@ -88,9 +88,8 @@ class ReportController extends Controller
             $data_product = $data_product->whereIn('item_product_branch_id', $list_branch);
         }
         else if(auth()->user()->branch){
-
             $data_branch = $data_branch->where('branch_id', auth()->user()->branch);
-            $data_product = $data_branch->where('item_product_branch_id', auth()->user()->branch);
+            $data_product = $data_product->where('item_product_branch_id', auth()->user()->branch);
             $data_order = $data_order->where('sales_order_from_id', auth()->user()->branch);
         }
         

@@ -98,6 +98,7 @@ class Order extends Model
         'sales_order_created_at' => [false => 'Delivery Date'],
         'sales_order_date_order' => [true => 'Tgl Order'],
         'crm_customer_name' => [false => 'Customer'],
+        'sales_order_from_id' => [false => 'Branch'],
         'sales_order_from_name' => [true => 'Branch'],
         'sales_order_sum_total' => [false => 'Branch'],
         'sales_order_sum_ongkir' => [false => 'Branch'],
