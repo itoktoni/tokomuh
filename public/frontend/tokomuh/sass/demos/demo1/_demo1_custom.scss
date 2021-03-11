@@ -457,6 +457,20 @@ section .owl-theme .owl-nav.disabled+.owl-dots {
     line-height: 22px !important;
 }
 
+.wa{
+    position: fixed;
+    bottom:45px;
+    right:10px;
+    z-index:9999;
+    img{
+        width:50px;
+        background-color:white;
+        border-radius:50%;
+        border:0.1px solid#53AF50;
+        cursor:pointer;
+    }
+}
+
 /* Responsive */
 @include mq(1366px, max) {
     .intro-slider figure {
@@ -481,6 +495,11 @@ section .owl-theme .owl-nav.disabled+.owl-dots {
 
     .area{
         padding:0px 20px;
+    }
+
+    .wa{
+        bottom:80px;
+        left:15px;
     }
 }
 
