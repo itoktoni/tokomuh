@@ -94,6 +94,7 @@ class Order extends Model
 
     public $searching = 'sales_order_id';
     public $datatable = [
+        'sales_order_group_id' => [true => 'Group'],
         'sales_order_id' => [true => 'Code'],
         'sales_order_created_at' => [false => 'Delivery Date'],
         'sales_order_date_order' => [true => 'Tgl Order'],
