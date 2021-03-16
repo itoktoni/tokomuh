@@ -30,12 +30,7 @@
         {!! $errors->first('finance_payment_sales_order_id', '<p class="help-block">:message</p>') !!}
     </div>
 
-    {!! Form::label('name', 'Purchase', ['class' => 'col-md-2 control-label']) !!}
-    <div class="col-md-4 {{ $errors->has('finance_payment_reference') ? 'has-error' : ''}}">
-        {{ Form::select('finance_payment_reference', [], request()->get('so') ?? null, ['class'=> 'form-control' ,'id' => 'reference']) }}
-        {!! $errors->first('finance_payment_reference', '<p class="help-block">:message</p>') !!}
-    </div>
-
+    
 </div>
 
 <div class="form-group">
